@@ -27,7 +27,7 @@
 ## 2026-10-30 — owner completion update
 - Task 1 is DONE: bulk select + retry is complete for the web console and PV (owner-confirmed).
 - Task 2 is DONE (owner-reported): the owner ran the real X video-link test through to the TEST channel and it succeeded. This result is recorded from the owner's report, not independent observation by the assistant.
-- The CENTER rule now permits merge without CI only for PRs whose changed files are all Markdown and whose content is documentation-only, after full diff review. The rubika-agent CI-green merge rule remains unchanged.
+- The CENTER rule now permits merge without CI only for PRs whose changed files are all Markdown and whose content is documentation-only, after full diff review. The `rubika-agent` CI-green merge rule remains unchanged.
 - The main channel remains locked pending explicit owner approval.
 
 ## 2026-10-31 — Rubika upload-size boundary
