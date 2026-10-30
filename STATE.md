@@ -27,5 +27,11 @@
 ## 2026-10-30 — owner completion update
 - Task 1 is DONE: bulk select + retry is complete for the web console and PV (owner-confirmed).
 - Task 2 is DONE (owner-reported): the owner ran the real X video-link test through to the TEST channel and it succeeded. This result is recorded from the owner's report, not independent observation by the assistant.
-- The CENTER rule now permits merge without CI only for PRs whose changed files are all Markdown and whose content is documentation-only, after full diff review. The `rubika-agent` CI-green merge rule remains unchanged.
+- The CENTER rule now permits merge without CI only for PRs whose changed files are all Markdown and whose content is documentation-only, after full diff review. The rubika-agent CI-green merge rule remains unchanged.
 - The main channel remains locked pending explicit owner approval.
+
+## 2026-10-31 — Rubika upload-size boundary
+- The observed Rubika upload acceptance boundary is approximately 50 MiB, not a proven universal/theoretical API maximum: run 40469257996 uploaded 49.9995 MiB successfully, sent it to the TEST channel, and confirmed deletion; run 40467474839 failed at 50 MiB and 49.9999 MiB; run 40453281819 failed at 64 MiB. The recorded sanitized failure label was rubika_upload_server_error.
+- Current agent/brain/rubika_publisher.py (RubikaPublisher) has no local maximum-size guard and does not split large files; it passes media to the Rubka SDK upload/send methods. The observed upload boundary means videos around/above 50 MiB are rejected by the Rubika upload path, although the exact service-side limit is not established.
+- Owner decision: investigate moving the owner console to a Telegram bot, considering Telegram Local Bot API's 2 GiB file limit. This investigation has NOT started; no Telegram migration or implementation is underway.
+- Evidence reviewed read-only from rubika-agent main and the 2026-10-27 capacity-probe branch/runs. No files in rubika-agent were changed; this entry records the observed evidence and owner decision only.
