@@ -73,3 +73,15 @@
 - Scope constraint: the owner explicitly limited the change to three files and said no other changes. Fixing the CI root cause requires editing `tests/test_failed_media_hook.py`, a fourth file not authorized in this task. That file was not changed. No test was deleted or weakened.
 - PR #132 remains OPEN and NOT MERGED because required CI is not all green. No Deploy Worker run was expected or executed; deployment is NOT verified. No manual workflow dispatch, secret/variable/gate/migration/quiet_hours change, or channel publication occurred.
 - Next action requires owner authorization to make the minimal test-harness correction in `tests/test_failed_media_hook.py`; then rerun naturally via the PR update and require all Python and Node checks green before merge.
+
+## 2026-11-01 — failed-media مسیرهای اصلی و وضعیت باقی‌مانده
+- `rubika-agent` main: `4d96dea3cbf17aa4bb9617e9c74c3beaab8eab68`.
+- PRهای #132 (حفظ رسانه‌های ناموفق)، #133/#134 (مسیرهای `failed_media` و workflow حذف)، و #135 (منوی «ارسال‌نشده‌ها» در کنسول) merge شدند؛ CI و انتشار GitHub Pages سبز گزارش شده‌اند.
+- تلاش مجدد و تست واقعی لینک X تا کانال تست موفق بوده است (طبق گزارش مالک؛ این نتیجه گزارش مالک است، نه مشاهدهٔ مستقل).
+- باقی‌مانده‌ها، به‌ترتیب:
+  1. زیرنویس Mob X — اولویت ۱.
+  2. اصلاح وضعیت `delete_requested` در `delete-request`، همراه با اصلاح دو regex در `tests/failed_media_list_api.test.mjs`.
+  3. تست واقعی حذف با ردیف ساختگی؛ فقط پس از اجازهٔ صریح مالک.
+  4. PR3: پیش‌نمایش وب.
+  5. اتصال TikTok.
+- کانال اصلی قفل است و نوشتن در D1 نیز قفل باقی می‌ماند؛ هیچ‌کدام با این ثبت وضعیت مجاز نشده‌اند.
