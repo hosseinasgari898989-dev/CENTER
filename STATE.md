@@ -85,3 +85,13 @@
   4. PR3: پیش‌نمایش وب.
   5. اتصال TikTok.
 - کانال اصلی قفل است و نوشتن در D1 نیز قفل باقی می‌ماند؛ هیچ‌کدام با این ثبت وضعیت مجاز نشده‌اند.
+
+## 2026-11-01 — Mob X subtitle ASR diagnostics
+- `rubika-agent` PR #136 merged by squash. Main SHA: `d02244f567ad2242e7572ae4fa96463132235f25`. Feature branch: `feat/subtitle-diagnostics`; backup branch: `backup/pre-subtitle-diagnostics-2026-11-01`, both created from pre-task main SHA `d7d3d13e02c0b492653559bdcfe9396223673e64`.
+- `scripts/subtitle_pipeline.py`: preserved the existing `clean_cues` implementation unchanged; added `count_dropped_duplicates`. `build_subtitled_video` now reports raw/clean cue counts, dropped duplicates, max cue duration, first/last cue times, cue coverage ratio, a numeric-only `asr_timeline` capped at 200 rows, and a static sanitized `asr_quality_warning`. This is diagnostic only; no cue timing, translation, fallback, publishing or rejection behavior was changed.
+- `agent/brain/mob_x_link_processor.py` previously explicitly selected ASR report fields and would omit these new diagnostics. It now whitelists exactly the nine new diagnostic fields, validates/coerces numeric values and limits timeline rows; cue text and unapproved keys do not pass into `subtitle_processing`.
+- Synthetic regression for the observed pattern: 85,000 ms video, three cues ending by 64,000 ms, first cue 47,000 ms; coverage 0.7294, maximum cue 47,000 ms, warning `long_cue_duration`. Duplicate-loop test: 4 raw cues, 2 clean cues, 2 dropped duplicates, coverage 0.2667, warning `low_cue_coverage`. This reproduces the reported shape synthetically; the original run #133 video was not reprocessed.
+- PR #136 CI all green on head `f9cde95f2146146d8aeaafea85ca307d6b992929`: Agent Brain run 41297676319 SUCCESS; Cloud Bootstrap run 41297676324 SUCCESS (520 unit tests, 18 subtitle-pipeline tests); Mob X owner-link processor run 41297676321 SUCCESS (read-only PR probe passed; staging and publishing jobs skipped); Console Playwright run 41297676317 SUCCESS. After merge, main Cloud Bootstrap run 41297868684 SUCCESS, main Console Playwright run 41297868667 SUCCESS, and Pages build/deploy run 41297868252 SUCCESS.
+- Cloudflare Worker Deploy was not triggered: `.github/workflows/deploy-worker.yml` limits push triggers to `src/**`, `wrangler.jsonc`, and the Deploy workflow itself; this PR changed none of those paths. No Worker deployment was needed for this scripts/processor-only change.
+- No secrets, repository variables/gates, migrations, D1, `quiet_hours`, workflow definitions or publishing behavior were changed; no manual workflow dispatch occurred and no publishing job ran. Main channel remains locked.
+
