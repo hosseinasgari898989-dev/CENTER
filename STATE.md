@@ -291,3 +291,99 @@
 - GitHub Pages build/deploy [41595820798](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41595820798) در هر سه job یعنی build، report-build-status و deploy SUCCESS شد.
 - پاسخ مسیر انتشار: /console/ از docs/console/index.html سرو می‌شود؛ این فایل به v2.html لینک نمی‌دهد. بنابراین ویرایش‌های v2 در docs/console/v2.html به‌خودی خود محتوای صفحهٔ /console/ را عوض نکردند.
 - هیچ Worker/backend، index.html، Secret، Variable، migration، D1، quiet_hours، کانال یا workflow تغییر نکرد؛ dispatch دستی یا انتشار واقعی انجام نشد. PRهای #17 و #23 دست‌نخورده و کانال اصلی قفل ماند.
+
+## اهداف دائمی پروژه — ثبت 2026-11-03
+1. **راه‌اندازی در کانال اصلی:** هدف بلندمدت این است که ربات در آینده در کانال اصلی فعالیت کند؛ کانال اصلی تا تأیید صریح و روشن مالک در متن ساده قفل می‌ماند. چک‌لیست مرتب و مرحله‌ای در [GO-LIVE.md](GO-LIVE.md) نگهداری می‌شود. ثبت این هدف یا چک‌لیست به معنی روشن‌کردن هیچ متغیر، gate یا مقصدی نیست.
+2. **ماندگاری روی سهمیه رایگان:** هدف طراحی، اجرای بلندمدت و بدون کار دستی روزانه در محدودهٔ رایگان D1، فضای ذخیره‌سازی، GitHub Actions، Worker و AI است. ظرفیت، نگهداری، خلاصه‌سازی، آرشیو، هشدار و کاهش خودکار بار باید از ابتدا پیش‌بینی شوند. رایگان‌ماندن سرویس‌های ثالث یا تغییرنکردن سهمیه‌های آن‌ها قابل تضمین نیست.
+3. **تجربهٔ کنسول PV:** برای ناوبری و هر کلیک دکمه، فقط یک پیام اصلی وجود داشته باشد و همان پیام با API ویرایش پیام Rubika به‌روزرسانی شود. پیام تازه فقط برای محتوای واقعاً جدا مثل پیش‌نمایش ویدیو ساخته شود؛ پیام‌های موقت پس از پایان اقدام خودکار حذف شوند.
+
+## 2026-11-03 — ITEM 1: ظرفیت، رفتار پیام‌های PV و ممیزی read-only گیت‌ها
+- بررسی شاخهٔ قدیمی docs/center-correction-2026-11-03: هیچ خطِ محتوایی از STATE.md آن در main مفقود نبود؛ خطوط عیناً در main وجود داشتند یا با ثبت‌های جدیدتر supersede شده بودند. PR #19 قبلاً squash-merge شده است. شاخه و backup قدیمی دست‌نخورده ماندند؛ merge یا delete جدیدی انجام نشد.
+- GO-LIVE.md به‌عنوان چک‌لیست مرتب آمادگی ایجاد شد. این ثبت صرفاً مستنداتی است؛ هیچ gate، کانال یا تنظیم انتشار تغییر نکرد.
+
+### B1 — ظرفیت D1 و نگهداری
+- پایگاه زنده: rubika-agent-db، شناسهٔ D1 برابر 70634eb9-70a8-48e8-b254-903a42e93304. Cloudflare اندازهٔ فیزیکی فایل را 991,232 بایت گزارش کرد؛ حدود 0.945 MiB، نزدیک 0.19% سقف 500 MB و حدود 499.05 MiB فضای باقی‌مانده. تعداد جدول‌های برنامه 26 است.
+- جمع اندازهٔ تخمینی محتوای ستون‌های تمام 26 جدول 448,853 بایت (حدود 0.428 MiB) است. این جمع، طول payload ستون‌های ذخیره‌شده است و سربار SQLite، صفحه‌ها و ایندکس‌ها را دربرنمی‌گیرد؛ برای ظرفیت واقعی، file_size معیار است.
+| جدول | رکورد | payload تقریبی (بایت) |
+|---|---:|---:|
+| agent_config | 1 | 26 |
+| ai_provider_calls | 91 | 18,330 |
+| ai_provider_calls_backup_20261016 | 24 | 4,529 |
+| ai_provider_state | 1 | 67 |
+| ai_usage_daily | 18 | 634 |
+| automation_queue | 113 | 77,724 |
+| brain_events | 248 | 47,839 |
+| console_channels | 0 | 0 |
+| console_jobs | 30 | 54,771 |
+| console_owner_invites | 1 | 169 |
+| console_owners | 2 | 296 |
+| console_rules | 1 | 409 |
+| d1_migrations | 8 | 357 |
+| delivery_attempts | 37 | 3,855 |
+| failed_media | 0 | 0 |
+| items | 98 | 132,078 |
+| owner_console_state | 1 | 85 |
+| owner_console_updates | 20 | 4,002 |
+| owner_digest_events | 222 | 66,336 |
+| owner_digest_state | 1 | 2,266 |
+| panel_events | 114 | 10,125 |
+| panel_links | 10 | 1,552 |
+| panel_owner | 1 | 52 |
+| panel_state | 15 | 1,101 |
+| runs | 123 | 22,250 |
+| sources | 0 | 0 |
+- رشد زیر شمار رکوردهای موجود است که timestamp آن‌ها در پنجرهٔ مربوط می‌افتد؛ به‌علت حذف‌های مجاز، این اعداد لزوماً gross insert روزانه/هفتگی نیستند:
+| جدول | رکوردهای موجود با تاریخ در 24 ساعت | در 7 روز |
+|---|---:|---:|
+| ai_provider_calls | 15 | 61 |
+| automation_queue | 0 | 8 |
+| brain_events | 31 | 133 |
+| console_jobs | 6 | 29 |
+| console_owner_invites | 0 | 1 |
+| console_owners | 0 | 1 |
+| delivery_attempts | 0 | 0 |
+| failed_media | 0 | 0 |
+| items | 7 | 23 |
+| owner_console_updates | 0 | 0 |
+| owner_digest_events | 21 | 112 |
+| panel_events | 38 | 114 |
+| panel_links | 6 | 10 |
+| runs | 1 | 9 |
+| sources | 0 | 0 |
+- سریع‌ترین رشد 7روزه از نظر ردیف: brain_events (133)، panel_events (114)، owner_digest_events (112)، ai_provider_calls (61)، سپس console_jobs (29) و items (23). برآورد بایت payload در چهار جدول نخست:
+| جدول | بایت جدید 24 ساعت | بایت جدید 7 روز |
+|---|---:|---:|
+| brain_events | 4,911 | 20,693 |
+| ai_provider_calls | 3,101 | 12,658 |
+| owner_digest_events | 4,398 | 27,475 |
+| panel_events | 3,518 | 10,125 |
+- پاک‌سازی خودکار D1 که در کد فعلی پیدا شد، محدود است: تابع firstSeen در src/owner_panel.js با احتمال 5% پس از ثبت event، ردیف‌های panel_events قدیمی‌تر از دو روز را حذف می‌کند؛ زمان‌بندی منظم ندارد. برای brain_events، owner_digest_events، ai_provider_calls، runs، console_jobs، items و automation_queue پاک‌سازی خودکار دوره‌ای پیدا نشد.
+- حذف‌های دیگر D1 فقط در مسیرهای صریح کنسول/مالک دیده شدند: حذف ردیف‌های terminal از automation_queue، حذف owner/channel، حذف لینک‌های غیرفعال، حذف source و حذف failed_media فقط پس از حذف موفق فایل Mega. این‌ها retention خودکار عمومی D1 نیستند.
+- پاک‌سازی فایل Mega از پاک‌سازی D1 جداست: staging موفق فقط پس از تأیید ledger و گذشت حداقل 24 ساعت قابل پاک‌شدن است؛ فایل‌های failed/uncertain عمداً نگه داشته می‌شوند. سهمیه و مصرف واقعی فضای حساب Mega در این بررسی قابل خواندن نبود و تخمین زده نشد.
+- مستندات رسمی فعلی Cloudflare D1 برای Free: حداکثر 500 MB برای هر DB و 5 GB مجموع فضای حساب، 10 DB، 5 میلیون ردیف خوانده‌شده و 100 هزار ردیف نوشته‌شده در روز، 50 query/subrequest برای هر invocation رایگان Worker و 7 روز Time Travel. با رسیدن به سقف روزانهٔ read/write، queryها تا reset روزانه خطا می‌دهند؛ با پرشدن فضای DB، درج داده و تغییر schema/index تا آزادسازی فضا یا ارتقای طرح متوقف می‌شود. منابع: [D1 limits](https://developers.cloudflare.com/d1/platform/limits/)، [D1 pricing](https://developers.cloudflare.com/d1/platform/pricing/)، [D1 FAQ](https://developers.cloudflare.com/d1/reference/faq/).
+- سهمیه‌های رایگان مرتبط: Workers Free برابر 100,000 درخواست در روز، 10 ms CPU برای هر HTTP request و 50 subrequest برای هر invocation است؛ سقف Cron Trigger حساب 5 است. Workers AI سهمیهٔ رایگان 10,000 Neurons در روز دارد. استاندارد runnerهای GitHub Actions در مخزن public رایگان‌اند؛ فضای artifact طرح Free برابر 500 MB و با Packages مشترک است. منابع: [Workers limits](https://developers.cloudflare.com/workers/platform/limits/)، [Workers AI pricing](https://developers.cloudflare.com/workers-ai/platform/pricing/)، [GitHub Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions).
+- طرح retention پیشنهادی (مستنداتی، هنوز پیاده‌سازی نشده):
+  - **Keep:** صف و itemهای فعال/غیرنهایی، موارد uncertain/failed، فایل اصلی failed_media تا حذف صریح مالک، dedupe keys، owner/rules/source فعال و stateهای singleton حفظ شوند.
+  - **Summarize:** brain_events، owner_digest_events، ai_provider_calls، panel_events، runs و jobهای قدیمی پس از ساخت خلاصهٔ روزانهٔ شمارش/نوع خطا/provider به retention محدود (پیشنهاد اولیه 30 روز) برسند؛ خلاصهٔ کم‌حجم بلندمدت بماند.
+  - **Archive:** metadata لازم برای گزارش و بررسی پس از خلاصه‌سازی به آرشیو فشردهٔ خارج از D1 منتقل شود؛ D1 فقط hash، status و ارجاع ضروری را نگه دارد. فایل‌های staging موفق طبق قاعدهٔ 24 ساعت پاک شوند؛ failed/uncertain خودکار حذف نشوند.
+  - **Capacity guard:** هشدار خودکار در 70% سقف هر DB یعنی 350 MB؛ در 80% خلاصه‌سازی و کاهش جزئیات غیرضروری؛ در 90% توقف خودکار discovery ورودی جدید و AI غیرضروری با حفظ کارهای درحال‌اجرا؛ در 95% fail-closed برای ورودی اختیاری و اعلان مالک. همین پایش باید D1 rows، Worker requests/CPU/subrequests، Neurons، Actions artifacts و فضای Mega را بپوشاند؛ هدف کاهش بار بدون کار دستی روزانه است.
+  - سقف‌های Groq و OpenRouter در rules برنامه به‌ترتیب 200 و 50 درخواست روزانه‌اند؛ این‌ها سقف داخلی پروژه‌اند، نه تعهد سهمیهٔ رایگان شرکت‌های ثالث.
+
+### B2 — پیام‌های کنسول PV
+- در src/owner_panel.js تابع edit وجود دارد، اما وضعیت panel_sync_mode در panel_state فعلی ثبت نشده و fallback کد atomic است. در حالت پیش‌فرض atomic، edit() به‌جای editMessageText/keypad یک sendMessage جایگزین می‌فرستد و پیام قبلی را best-effort حذف می‌کند. APIهای واقعی editMessageText و editMessageKeypad فقط با panel_sync_mode=inplace اجرا می‌شوند؛ در صورت شکست ویرایش نیز کد به send جایگزین fallback می‌کند.
+- کلیک‌های معمول صفحه‌ای شامل p_home، p_status، p_queue، p_ai، p_report، p_links، jobs، settings و list screens از render/edit عبور می‌کنند؛ اما چون mode فعلی atomic است، نتیجهٔ معمول آن‌ها send جدید و سپس delete قبلی است، نه ویرایش همان پیام.
+- callbackهای Mob X شامل publish، edit caption، no-caption، reject و manual confirm برای پیام prompt/نتیجه/خطا از send() استفاده می‌کنند. send() مقدار panel_mid را به پیام تازه تغییر می‌دهد؛ بنابراین پیام notice می‌تواند pointer پنل اصلی را تصاحب کند و پیام قبلی الزاماً پاک نشود. پیش‌نمایش ویدیو با sendFile پیام مستقل است؛ هنگام refresh موفق preview قبلی حذف می‌شود.
+- مسیرهای /start، /menu و callbackهای stale نیز از sendFreshPanel استفاده می‌کنند؛ آن‌ها یک پیام جایگزین می‌سازند و پیام قبلی را حذف می‌کنند. بعضی پیام‌های موقت Mob prompt/notice پس از اقدام به‌صورت قطعی auto-delete نمی‌شوند.
+- تاریخچهٔ تغییر رفتار: PR [#63](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/63)، commit d2fba5da077088edec65f562cbfd80bc80a6bf89، 2026-10-24 13:10 UTC، تک‌پیام و ویرایش درجا را معرفی کرد. سپس PR [#81](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/81)، commit b58f850b12ba5504216278415de159d27a262adc، 2026-10-26 19:44 UTC، default را به atomic send-and-replace تغییر داد و inplace را opt-in مالک کرد. بنابراین PR #81 علت تغییر رفتار پیش‌فرض از edit به send/delete است.
+- طرح اصلاح فقط متنی: تمام کلیک‌های معمول باید به‌طور پیش‌فرض editMessageText/keypad را روی شناسهٔ تنها پیام اصلی اجرا کنند؛ panel_mid فقط به همان پیام اصلی اشاره کند؛ sendFile فقط برای preview مستقل باشد؛ prompt/noticeهای موقت شناسهٔ مستقل داشته باشند و پس از اقدام/input پاک شوند. تست‌های mocked باید تمام callbackها را پوشش دهند و اثبات کنند کلیک عادی پیام اصلی دوم نمی‌سازد، آن را edit می‌کند و پیام موقت بعد از اقدام حذف می‌شود. در این ممیزی هیچ کد تغییر نکرد.
+
+### B3 — ممیزی read-only پرچم‌ها و gateهای انتشار
+- Cloudflare Worker version #112 (2026-11-03 04:54 UTC) دارای binding متنی PUBLISHING_ENABLED=true است. در src/index.js کد main هم‌زمان ثابت PUBLISHING_ENABLED=false دارد: /health و فیلد سطح publishing از constant false استفاده می‌کنند، اما capabilities.publishing در /api/status از env.PUBLISHING_ENABLED === true می‌آید. بنابراین در محیط فعلی این دو فیلد متناقض‌اند؛ agent/brain/mob_x_link_publisher.py مقدار capabilities.publishing را می‌خواند.
+- ثابت کد PUBLISHING_ENABLED=false از ادغام Worker در PR [#6](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/6)، commit 3a0ae601969381bbdf6d5b3b158b485763bcf6a5 در 2026-10-15، وجود داشته است؛ در تاریخچهٔ منبع، تغییر true به false برای این constant پیدا نشد.
+- D1 console_rules: publishing_enabled=false و test_channel_only=true، version=3، آخرین updated_at برابر 2026-10-26. migration 0010 و PR [#69](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/69) این دو وضعیت را از آغاز false/true seed کردند و API فعلی هم این دو مقدار را pinned نگه می‌دارد؛ transition ثبت‌شدهٔ true به false پیدا نشد.
+- config/mob_official_sources.json برای Mob X مقادیر enabled=true، mode=production و production_enabled=true دارد، اما مقصد با hash ثابت کانال تست pin شده و حداکثر یک پست در هر run است. این وضعیت در commit 55ea5165f74c9fc75564b41c6a6c9261dd3e7c83 در 2026-10-20 فعال شد؛ commit به PR مرتبطی وصل نبود. workflow از ابتدا با gate بسته در commit 85df12921909029a080be44d34581bd52d00df5e در 2026-10-14 ثبت شد؛ PR #79 در 2026-10-26 hash مقصد تست را pin کرد و PR #116 در 2026-10-28 مسیر owner-approval را اضافه کرد.
+- مقدار فعلی Actions variable با نام RUBIKA_AGENT_MOB_X_PUBLISH_GATE_20261014 مستقیماً از endpoint Variables قابل خواندن نبود؛ هیچ تغییری در آن انجام نشد. اما run زمان‌بندی‌شدهٔ [41590280323](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41590280323) در 2026-11-03 06:30 UTC job مربوط به publish-all-new-official-x-posts-in-window را اجرا کرد؛ شرط YAML آن run را فقط در صورت approved بودن gate اجرا می‌کند، پس gate در زمان آن run approved بوده است. این مشاهده، مقدار بعد از زمان run را مستقلاً ثابت نمی‌کند.
+- جدول D1 console_channels اکنون صفر ردیف دارد. هیچ Secret یا مقدار خام شناسهٔ کانال خوانده نشد. کدهای publishing مورد بررسی مقصد را به hash کانال تست محدود می‌کنند؛ این ممیزی main channel را تغییر نداد.
+- نتیجهٔ صریح: هیچ PR بررسی‌شده‌ای یک flag واحد و فعال را از true به false تغییر نداده است. binding زندهٔ Worker true است؛ constant کد از PR #6 false بوده؛ publishing_enabled در D1 از PR #69 false بوده؛ config مربوط به Mob X به‌نام production true است اما مقصد hash آن کانال تست است. این لایه‌ها جدا هستند و نباید با هم یکی گرفته شوند.
+
+- تمام queryهای D1 در این ممیزی SELECT/metadata read-only بودند؛ Cloudflare نتیجهٔ rows_written=0 و changed_db=false را گزارش کرد. در rubika-agent هیچ فایلی تغییر نکرد؛ هیچ migration، D1 write، Secret، Variable، publishing flag/gate، quiet_hours، channel setting، workflow dispatch یا انتشار واقعی انجام نشد.
