@@ -623,3 +623,14 @@ TikTok discovery runs in GitHub Actions via Termux Docker (.github/workflows/ter
 - PR #166 duplicate مربوط به ITEM 10 هنوز باز است و mergeable=false؛ مالک باید دربارهٔ بستن/بازبینی آن تصمیم بگیرد. PR #165 از قبل در main است.
 - برای تکمیل E2E TikTok، پس از پیاده‌سازی جداگانهٔ classifier بصری و حفظ آستانه‌ها، باید دادهٔ diagnostics خام/معتبر ذخیره و اجرای طبیعی بعدی فقط در کانال TEST مشاهده شود. تا آن زمان required_visual_or_music_check_not_passed باید fail-closed بماند.
 - این ثبت صرفاً مستنداتی است. هیچ code/config/Secret/Variable/gate/migration/quiet_hours یا تنظیم مقصد انتشار در این task تغییر نکرد؛ D1 فقط SELECT شد و rows_written=0 و changed_db=false گزارش شد. کانال MAIN همچنان قفل است. زیرنویس‌ها و PRهای #17/#23 untouched هستند.
+
+
+## 2026-11-03 — ITEM 12: بررسی read-only PR #166 و چک بصری TikTok
+
+- **FACT:** PR #165 در main ادغام است؛ merge SHA برابر 2c6d3ca971f19682f5a1a7ff85ce4e2777681a27. PR #166 همچنان OPEN و mergeable=false است؛ هیچ تغییری در آن انجام نشد.
+- **FACT:** قابلیت اصلی TikTok failed-media preservation در #165 موجود است. #166 تغییر جداگانهٔ diagnostics در queue_worker.py و تست آن را دارد، اما کلید مورد انتظارش failed_media با خروجی فعلی #165 یعنی failed_media_preservation یکی نیست؛ این تغییر در وضعیت فعلی کار نمی‌کند. بستن #166 قابلیت preservation را از دسترس خارج نمی‌کند؛ فقط کد diagnostics/test ادغام‌نشده از دست می‌رود. تصمیم close با مالک است.
+- **FACT:** ریشهٔ زمانی mismatch در commit 2026-10-23 (97578088) است: policy جدید فقط has_music را در required moderation fields نگه داشت، اما guard نهایی is_poppy_playtime و flag اجباری شش منبع باقی ماند. از commit اولیهٔ 2026-10-15 (3a0ae601) این فیلد موجود بود؛ در policy قدیمی مقدارش از metadata ساخته می‌شد، نه یک vision inference اثبات‌شده. علت دقیق تصمیم/حذف در commentها مستند نیست.
+- **FACT:** برآورد طراحی پنج فریم: Cloudflare حدود 5 call/video و 60–80 Neurons/video (فرض توکن نامطمئن)؛ حداکثر 20 candidate/day یعنی 100 calls و حدود 1,200–1,600 Neurons/day؛ backlog سی‌تایی حدود 150 calls و 1,800–2,400 Neurons. Groq با 3 تصویر/request حدود 2 calls/video و سقف داخلی 200/day؛ OpenRouter پنج call/video در فرض محافظه‌کارانه و سقف داخلی/Free برابر 50/day. جزئیات در سند ITEM 12 است.
+- **پیشنهاد:** گزینه A: visual classifier مستقل Cloudflare Workers AI با پنج فریم و fail-closed؛ تا تأیید تصمیم‌های مالک، guard حفظ و هیچ TikTokی با فقدان is_poppy_playtime عبور داده نشود.
+- سند بررسی: ITEM-12-TIKTOK-VISUAL-REVIEW.md. Branch: docs/item-12-tiktok-visual-review-2026-11-03. Backup: backup/pre-item-12-2026-11-03.
+- rubika-agent/main روی SHA 2c6d3ca971f19682f5a1a7ff85ce4e2777681a27 ماند. هیچ کد/تنظیم/Secret/gate/migration/quiet_hours، D1 write، workflow dispatch، publish یا تغییر کانال انجام نشد. MAIN همچنان قفل است.
