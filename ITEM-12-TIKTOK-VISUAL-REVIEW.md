@@ -9,7 +9,7 @@
 
 - [PR #165](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/165) ادغام شده است. SHA نهایی آن 5fe33cfab5afea481008cda1d957bfe72e9f7fe2 و merge/main SHA برابر 2c6d3ca971f19682f5a1a7ff85ce4e2777681a27 است.
 - [PR #166](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/166) هنوز OPEN است؛ head برابر afbdc0a9c172bbb351ac90fdedcf77cb548ddcdb و base اولیهٔ آن 8196baef7c2481a3ad7daec85ecbe946c45050f3 بوده است.
-- مقایسهٔ GitHub برای #166 نسبت به main وضعیت diverged، پنج commit جلو و یک commit عقب را نشان می‌دهد. GitHub مقدار mergeable=false گزارش می‌کند.
+- مقایسهٔ GitHub برای #166 نسبت به main وضعیت diverged، پنج commit جلو و یک commit عقب را نشان می‌دهد. API مقدار mergeable=false و mergeable_state=dirty را گزارش می‌کند؛ بنابراین وجود وضعیت conflict/dirty قطعی است، هرچند API مسیر دقیق conflict را نام نمی‌برد.
 - فایل‌های #165: agent/brain/e2e_from_report.py، tests/test_failed_tiktok_preservation.py و .github/workflows/brain-ci.yml.
 - فایل‌های #166: agent/brain/e2e_from_report.py، agent/brain/queue_worker.py، tests/test_e2e_from_report.py و tests/test_queue_worker.py.
 
@@ -30,9 +30,9 @@
 
 **FACT:** #166 از نظر مسیر اصلی نگهداری فایل ناموفق، توسط #165 supersede شده است؛ ولی diffها یکسان نیستند و #166 دو فایل گزارش/تست یکتا دارد.
 
-**FACT:** بستن #166، قابلیت فعال preservation را از main حذف نمی‌کند؛ آن قابلیت از قبل در #165 ادغام شده است. تنها کد گزارش diagnostics و تست همراهش که هنوز ادغام نشده‌اند از دست می‌روند؛ این کد در شکل فعلی نیز به‌دلیل mismatch نام فیلد کار نمی‌کند.
+**FACT:** بستن #166 قابلیت فعال preservation را از main حذف نمی‌کند؛ آن قابلیت از قبل در #165 ادغام شده است. بستن آن، تغییر گزارش diagnostics در queue_worker.py و تستش در tests/test_queue_worker.py، به‌علاوهٔ مجموعهٔ تست‌های تکمیلی در tests/test_e2e_from_report.py را از شاخه حذف می‌کند. این تست‌ها می‌توانند پوشش تکمیلی مفیدی باشند، اما مسیر اصلی preservation در #165 و تست مستقل خودش موجود است. تغییر diagnostics نیز به شکل فعلی با نام فیلد main هماهنگ نیست.
 
-**GUESS:** علت محتمل mergeable=false، قدیمی‌بودن base و تغییر هم‌پوشان agent/brain/e2e_from_report.py در #165 است. API وجود non-mergeable را تأیید می‌کند، اما نوع دقیق conflict در پاسخ دریافت‌شده مشخص نشده است.
+**FACT:** GitHub mergeable_state=dirty و mergeable=false گزارش کرده است؛ پس PR بدون رفع conflict قابل ادغام نیست. **GUESS:** conflict به احتمال زیاد در agent/brain/e2e_from_report.py است، چون این فایل در هر دو PR تغییر کرده و #165 قبل از head #166 به main رسیده است. پاسخ API فهرست دقیق فایل‌های conflict را نشان نمی‌دهد.
 
 **اقدام:** هیچ تغییری در #166 انجام نشد؛ نه edit، نه close و نه merge. تصمیم بستن یا نگه‌داشتن آن با مالک است.
 
