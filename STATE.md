@@ -209,3 +209,11 @@
 - Final PR-head CI is green: Cloud Bootstrap [41559745488](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41559745488), Agent Brain [41559745443](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41559745443), Console Playwright [41559745508](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41559745508). Cloud Bootstrap ran 549 unit tests (one pre-existing skip), the dedicated subtitle tools suite (17 tests), pipeline suite (33 tests), and uploaded both subtitle PNG artifacts.
 - Post-merge checks are green: Cloud Bootstrap [41560050436](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41560050436), Console Playwright [41560050728](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41560050728), and Pages build/deploy [41560049698](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41560049698). No Worker Deploy workflow was triggered: the merge changed only `scripts/**`, `tests/**`, `.github/workflows/ci.yml`, outside the Worker deploy path filters.
 - No D1, secrets, repository variables/gates, migrations, `quiet_hours`, channel settings, or publishing configuration were changed. No manual workflow dispatch, media processing, or publication occurred; main channel remains locked.
+
+## 2026-11-03 — ممیزی امنیت وب و وضعیت مسیرهای رسانه
+- ممیزی امنیت وب: توکن مشترک وب مالک، مالک را از بیننده تشخیص نمی‌دهد؛ callbackهای حساس PV نقش مالک را دوباره بررسی نمی‌کنند؛ حذف گروهی Mega به سخت‌سازی سمت Worker نیاز دارد. تا اصلاح این موارد، انتقال تأیید/انتشار Mob X به وب توصیه نمی‌شود.
+- YouTube با وضعیت `youtube_delivery_paused_by_owner` متوقف است؛ فقط Relay استفاده می‌شود و Render دیپلوی نشده است.
+- مسیرهای TikTok/Instagram از `CobaltDownloader` استفاده می‌کنند.
+- Termux فقط برای دانلود استفاده می‌شود؛ ASR روی GitHub Actions اجرا می‌شود.
+- وضعیت اعلام‌شدهٔ متغیر `MOB_X_TEST_FORCE_PREVIEW_FAIL`: پاک.
+- PR #147 هنوز روی ویدیوی عمودی واقعی ۷۲۰×۱۲۸۰ و ویدیوی افقی جدید تأیید نشده است؛ تشخیص خودکار زیرنویس‌های از قبل سوخته‌شده وجود ندارد.
