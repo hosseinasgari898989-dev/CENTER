@@ -661,3 +661,15 @@ do NOT build a visual classifier. The 6 owner-selected TikTok sources plus the c
 - **PR #166:** همچنان OPEN و untouched است؛ head آن afbdc0a9c172bbb351ac90fdedcf77cb548ddcdb باقی مانده. PRهای #17/#23 و subtitle files نیز دست‌نخورده‌اند.
 - هیچ Worker source، config، آستانهٔ موسیقی 0.70/0.15، ambiguity rule، captions، owner approval/destination guard یا سایر guards تغییر نکرد. هیچ Secret، Variable، gate، migration، quiet_hours، D1 write دستی، manual workflow dispatch یا publishing انجام نشد؛ کانال MAIN قفل باقی است.
 - سند ممیزی Part 1: ITEM-13-MUSIC-AUDIT.md؛ Center PR ثبت ممیزی: #40. Center PR ثبت final-state update: [#41](https://github.com/hosseinasgari898989-dev/CENTER/pull/41). Backup ثبت final-state update: backup/pre-item-13-final-state-2026-11-03.
+
+
+## 2026-11-03 — ITEM 14: ثبت تشخیص صوت و احتمال موسیقی در گزارش صف
+
+- **تغییر کد:** PR [#168](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/168) با squash merge commit برابر `b7750343a4fd9b88585e7433831cf509088a0a57` ادغام شد. فقط `agent/brain/pipeline.py`, `agent/brain/e2e_from_report.py`, `agent/brain/queue_worker.py` و دو فایل تست تغییر کردند.
+- **گزارش هر ویدئوی بررسی‌شده:** دو فیلد `music_probability` و `has_audio_stream` در هر نتیجهٔ صف قرار می‌گیرند؛ احتمال فقط عدد متناهی بین 0 و 1، وضعیت صوت فقط Boolean دقیق، و مقدار ناشناخته/نامعتبر `null` است. برای مورد بی‌صدا احتمال محاسبه‌نشده به‌جای حدس `null` می‌ماند. هیچ فایل صوتی/ویدئویی، payload مدل یا URL تازه‌ای اضافه نشده است.
+- **تست‌های mocked:** نتیجهٔ موفق با احتمال 0.91 و صوت true؛ مورد ambiguous با 0.42 و صوت true؛ مورد no-audio با احتمال null و صوت false؛ و خطای پردازش با هر دو مقدار null آزموده شدند. تست‌های جدید در Agent Brain checks اجرا و PASS شدند.
+- **CI سبز روی head `2afb25718fce32799a674bca9d5e0558d9eb19a2`:** Agent Brain [run 41698508908](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41698508908)، Console Playwright [run 41698508986](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41698508986)، Cloud bootstrap [run 41698509003](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41698509003).
+- **Deploy:** Deploy Worker برای merge commit فعال نشد؛ diff تنها شامل `agent/brain/**` و `tests/**` بود، درحالی‌که workflow فقط با تغییر `src/**`, `wrangler.jsonc` یا خود workflow اجرا می‌شود. در Cloud bootstrap، live Worker smoke-test به علت رویداد PR skip شد. هیچ manual dispatch انجام نشد.
+- **SHA:** `rubika-agent/main = b7750343a4fd9b88585e7433831cf509088a0a57`. Backup پیش از تغییر: `backup/pre-music-diag-2026-11-03` با SHA پایه `a2ca032fb6b0c0a2705f954bc3de12f8100bc224`.
+- **حفاظت:** thresholdهای 0.70 و 0.15، قاعدهٔ ambiguity، keyword check، همهٔ guards و مسیر owner-approval بدون تغییرند. TEST only؛ MAIN locked. هیچ Secret/Variable/Gate/Migration/quiet_hours، D1 write دستی، dispatch یا publishing انجام نشد. PRهای #17/#23/#166 و فایل‌های subtitle دست‌نخورده‌اند.
+- **وضعیت بعدی:** waiting for the next NATURAL Daily queue run to verify TikTok sending after #167
