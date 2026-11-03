@@ -583,7 +583,7 @@ TikTok discovery runs in GitHub Actions via Termux Docker (.github/workflows/ter
 
 #### محل guard و قرارداد pass/fail
 
-- **FACT:** در agent/brain/e2e_from_report.py، پس از staging و moderation، required_checks از has_music=true شروع می‌شود. برای هر source policy که require_poppy_relevance_check=true دارد، is_poppy_playtime=true هم لازم می‌شود. guard مقدار هر کلید را با identity مقایسه می‌کند؛ فیلد غایب، null، مقدار غیر boolean یا false، pass نمی‌شود و نتیجه brain_checks_not_publishable با reason=required_visual_or_music_check_not_passed است.
+- **FACT:** در agent/brain/e2e_from_report.py، پس از staging و moderation، required_checks از has_music=true شروع می‌شود. برای هر source policy که require_poppy_relevance_check=true دارد، is_poppy_playtime=true هم لازم می‌شود. guard هر کلید را با مقایسهٔ هویت boolean (is) می‌سنجد؛ فیلد غایب، null، مقدار غیر boolean یا false، pass نمی‌شود و نتیجه brain_checks_not_publishable با reason=required_visual_or_music_check_not_passed است.
 - **FACT:** هر شش TikTok source در config/tiktok_source_policy.json دارای require_poppy_relevance_check=true هستند.
 - **FACT:** music moderator در agent/brain/vision_moderator.py audio-only است: ویدئو را با ffmpeg به نمونهٔ MP3 مونو/16 kHz تا سقف 60 ثانیه تبدیل می‌کند و فقط soundtrack audio را به Worker می‌فرستد؛ نه فریم تصویر می‌فرستد و نه is_poppy_playtime برمی‌گرداند.
 - **FACT:** در src/index.js، تصمیم موسیقی از @cf/cloudflare/clef-omni با probability گرفته می‌شود: p >= 0.70 نتیجهٔ has_music=true؛ p <= 0.15 نتیجهٔ false؛ و بازهٔ 0.15 < p < 0.70 نتیجهٔ null و reason=music_probability_ambiguous است. مقدار گمشده/نامعتبر reason جداگانهٔ music_answer_missing_or_invalid دارد.
