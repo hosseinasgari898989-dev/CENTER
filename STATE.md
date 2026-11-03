@@ -635,3 +635,15 @@ TikTok discovery runs in GitHub Actions via Termux Docker (.github/workflows/ter
 - سند بررسی: ITEM-12-TIKTOK-VISUAL-REVIEW.md. Branch: docs/item-12-tiktok-visual-review-2026-11-03. Backup: backup/pre-item-12-2026-11-03.
 - PR مستنداتی CENTER: [#39](https://github.com/hosseinasgari898989-dev/CENTER/pull/39)؛ فقط دو فایل Markdown تغییر کرده‌اند و diff کامل پیش از merge بررسی شد.
 - rubika-agent/main روی SHA 2c6d3ca971f19682f5a1a7ff85ce4e2777681a27 ماند. هیچ کد/تنظیم/Secret/gate/migration/quiet_hours، D1 write، workflow dispatch، publish یا تغییر کانال انجام نشد. MAIN همچنان قفل است.
+
+ 
+## 2026-11-03 — ITEM 13: ممیزی صدا و تصمیم مالک برای حذف فقط visual-field gate
+
+OWNER DECISION (explicit, verbatim):
+do NOT build a visual classifier. The 6 owner-selected TikTok sources plus the current rules are enough: caption/hashtags must contain poppy or playtime, audio and basic media checks required, music-probability guard unchanged. The leftover visual requirement is_poppy_playtime from before the 2026-10-23 policy rewrite must stop blocking. This is a deliberate, narrow guard change approved by the owner. PR #166 stays open and untouched.
+
+- **PART 1 — FACT:** ممیزی Daily Queue runs #31–#37 تعداد 10 ویدئوی TikTok ردشده یافت: 4 مورد music_probability_ambiguous با stream صوتی (از مسیر اجرا استنباط شده)، 5 مورد required_visual_or_music_check_not_passed پس از قبول‌شدن music، و 1 مورد pipeline_error_cobalt_http_400 پیش از ffprobe. هیچ رد ثبت‌شده‌ای با no_audio دیده نشد؛ برای مورد Cobalt، audio UNKNOWN است. Exact probability چهار مورد ambiguous در artifactها/logها ذخیره نشده. چهار احتمال visual mismatch قبلی در D1 snapshot و STATE قبلی به ترتیب 0.8628، 0.9474، 0.9269 و 0.9236 ثبت شده بودند.
+- **PART 1 — UNKNOWN:** نوع واقعی صوت در چهار مورد مبهم مشخص نیست؛ امکان re-encode سمت Cobalt/upstream منتفی نیست ولی شاهدی در دست نیست؛ سخت‌گیری/آسان‌گیری classifier از دادهٔ فعلی قابل قضاوت نیست. هیچ آستانه یا قاعدهٔ موسیقی تغییر نکرد.
+- گزارش کامل و جدول ده‌ردیفی: ITEM-13-MUSIC-AUDIT.md. چهار مورد ambiguous و سایر موارد به تفکیک run، handle، duration، audio evidence، probability، rule و reject code ثبت شده‌اند.
+- **PART 2 — approved scope:** فقط شرط is_poppy_playtime در final guard برای TikTok برداشته می‌شود. require_poppy_relevance_check در شش config فعلاً صرفاً flag قدیمی visual gate است؛ قاعدهٔ واقعی keyword در policy.py با required_any_keywords=["poppy","playtime"] مستقلاً enforce می‌شود. Audio, basic media, music thresholds و ambiguity rule ثابت می‌مانند.
+- Backup docs: backup/pre-item-13-2026-11-03؛ branch docs: docs/item-13-music-audit-2026-11-03. rubika-agent کد هنوز تغییر نکرده است؛ اجرای PART 2 پس از ثبت و ارائهٔ PART 1 ادامه می‌یابد.
