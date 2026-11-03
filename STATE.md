@@ -489,3 +489,66 @@ TikTok discovery runs in GitHub Actions via Termux Docker (.github/workflows/ter
 - گوشی فقط برای UI خصوصی PV مجاز خواهد بود؛ هیچ publish، approval-to-publish، action رسانه‌ای/کانالی یا GitHub dispatch روی آن قرار نمی‌گیرد. خاموشی/sleep/باتری باید با انقضای lease به Worker برگردد. Free-tier usage اضافی از heartbeat/relay و inbox/lease ممکن است؛ مصرف و headroom حساب اندازه‌گیری نشده و صرفه‌جویی تضمین نشده است.
 - منابع رسمی ثبت‌شده در ACCELERATOR-DESIGN.md: rubika.ir/botapi، rubika.ir/botapi/methods، rubika.ir/botapi/models؛ منابع Free-tier: Cloudflare Workers limits، D1 pricing و Durable Objects pricing.
 - فقط سند طراحی و این ثبت وضعیت در این کار تغییر می‌کنند. هیچ تغییری در rubika-agent، Secret، Variable، gate، migration، D1، quiet_hours، dispatch، publishing، webhook endpoint، کانال اصلی، زیرنویس‌ها یا PRهای #17/#23 انجام نشده است. ITEM 8 شروع نشده و منتظر تصمیم مالک است.
+
+
+## 2026-11-03 — ITEM 9 و ITEM 8: رفع سه باگ PV و ارزیابی read-only آمادگی Go-Live
+
+### ITEM 9 — سه اصلاح دقیق PV
+
+- فایل پیوست pv-fix-edits.md خوانده شد. هر دو بلوک A و B در فایل زندهٔ rubika-agent/main دقیقاً یک‌بار match شدند. پیش از Edit C، هفت مورد \`\\n\` (سه suffix مربوط به error_detail و دو پیام موفقیت tryClaim که هرکدام دو escape داشتند) در src/owner_panel.js پیدا شد؛ بعد از اصلاح هیچ مورد دو-backslash باقی نماند. هیچ regex یا رشته‌ای با escape تک-backslash دست‌کاری نشد.
+- A: نتیجهٔ موفق publish با updateMobMain(ui, ...) روی پیام اصلی نمایش داده می‌شود؛ panel_mid در مسیر عادی حفظ می‌شود. B: لینک rejected فقط وقتی دوباره pending می‌شود که برای آن mob_x_link job وجود نداشته باشد؛ لینک rejected دارای job، confirmed و sent همچنان مسدودند. C: هفت escape پیام به newline واقعی تبدیل شدند.
+- تست‌های mocked اضافه شدند: حفظ panel_mid و نبود sendMessage جدید در A؛ لغو/ثبت دوبارهٔ لینک بدون job و مسدودماندن rejected دارای job/confirmed/sent در B؛ بررسی نبود \`\\n\` و newline واقعی پیام‌های claim و سه error_detail در C.
+- PR [#164](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/164)، branch fix/pv-console-3-bugs-2026-11-03 و backup backup/pre-pv-fixes-2026-11-03؛ head نهایی 1c5dc18c2487005b4f60ff5e1919ccfc0bb9c3f3؛ squash merge به rubika-agent/main با SHA 8196baef7c2481a3ad7daec85ecbe946c45050f3.
+- CI نهایی head PR سبز: Agent Brain [41642408484](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41642408484)، Cloud Bootstrap [41642408955](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41642408955)، Console Playwright [41642408795](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41642408795)، Mob X owner-link processor [41642408703](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41642408703). در Mob X run فقط probe خواندنی موفق شد و jobهای Claim/Publish در رویداد PR skipped بودند. یک اجرای اولیهٔ Agent Brain به‌علت assertion تست C شکست خورد؛ متن تست با خروجی واقعی md() هماهنگ و اجرای نهایی سبز شد.
+- پس از merge، Deploy Worker [41642841895](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41642841895)، Cloud Bootstrap [41642841822](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41642841822)، Console Playwright [41642842002](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41642842002) و Pages build/deploy [41642840281](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41642840281) همگی SUCCESS شدند. SHA فعلی main همان 8196baef7c2481a3ad7daec85ecbe946c45050f3 است.
+- محل اتصال فرمان‌ها در src/owner_panel.js فعلی: /debug در HELP_TEXT خط 95، تابع debugText() خط 708، handler دکمهٔ p_debug خطوط 1063–1065 و map فرمان /debug به p_debug خط 1076 است. /panelmode در فهرست commandهای قابل‌تشخیص خط 1191 و handler آن از خط 1239، با parsing ورودی خط 1245 و متن نتیجه خط 1248، همچنان wired است.
+- بازبینی hostile diff: فقط src/owner_panel.js و tests/worker.test.mjs تغییر کردند. منطق A از پیام جدید به edit پیام اصلی تغییر کرد؛ B با شرط وجود job و UPDATE مشروط به status='rejected' محدود است؛ C فقط هفت رشتهٔ شناسایی‌شده را اصلاح کرد. هیچ تغییر در Loading، latency، publishing flags/gates، subtitles یا PRهای #17/#23 ایجاد نشد.
+
+### ITEM 8 — بررسی مرحله‌ای GO-LIVE.md (فقط‌خواندنی)
+
+**نتیجهٔ کلی: آمادگی انتشار در MAIN تأیید نشده؛ کانال اصلی قفل می‌ماند.** وضعیت هر مرحله در تاریخ این بررسی:
+
+1. **NOT DONE — تأیید صریح مالک. FACT:** در این کار و شواهد بررسی‌شده، متن سادهٔ yes برای انتشار در MAIN وجود ندارد؛ این گزارش مجوز نیست.
+2. **NOT DONE — راستی‌آزمایی مقصد اصلی. FACT:** کد و workflowهای فعلی مقصد را با hash ثابت کانال TEST محدود می‌کنند. مدرک مستقلی از تأیید شناسهٔ کانال MAIN، administrator بودن بات و توان مدیریت پیام در MAIN پیدا نشد.
+3. **NOT DONE — جدایی مقصدها و guardها. FACT:** guardهای test-channel در کد و workflow وجود دارند، اما لایه‌های publishing با هم سازگار نیستند (جزئیات پایین). مقصد MAIN تأیید/پیکربندی نشده و مقدار زندهٔ Actions gate قابل خواندن نبود.
+4. **NOT DONE — E2E کامل در TEST. FACT:** Termux run #110 فقط metadata و queue intake را انجام داد و صفر دانلود/ارسال داشت. Daily queue run #36 در 2026-11-02 با guard محتوایی fail-closed شد؛ یک آیتم TikTok بررسی شد، صفر ارسال شد و 30 مورد در صف ماند. بنابراین یک ویدئوی TikTok که discovery تا دانلود/پردازش/ارسال/رسید را کامل طی کرده باشد، اثبات نشده است. اجرای X/Mob X یا Termux metadata جایگزین E2E کامل TikTok نیست.
+5. **NOT DONE — UX کنسول PV. FACT:** PRهای #163 و #164 قراردادهای پیام اصلی، prompt موقت، Loading، نتیجه، callbacks و newline را با تست mocked پوشش می‌دهند. مدرک تست همهٔ دکمه‌ها در کلاینت واقعی Rubika/PV و مشاهدهٔ آن‌ها روی دستگاه مالک موجود نیست.
+6. **NOT DONE — ظرفیت رایگان. FACT:** اندازهٔ D1 قابل خواندن است (در این بررسی 995,328 بایت)، اما آمار روزانهٔ D1 rows read/write، Worker requests/CPU/subrequests، Workers AI Neurons و سهمیهٔ Mega در health/digest فعلی موجود نیست. meta.rows_read/rows_written مربوط به یک query است، نه مجموع روزانه. هشدار خودکار 70% برای این شاخص‌های فاقد منبع معتبر قابل اثبات نیست.
+7. **NOT DONE — عملیات و rollback. FACT:** CI لازم PR #164 سبز است و Deploy Worker پس از merge موفق شد؛ ولی مدرک کامل تمرین rollback، بازیابی یک job نامطمئن/duplicate، هشدارهای ظرفیت و اجرای end-to-end health/alert روی همهٔ مسیرها وجود ندارد. سبزشدن Deploy به‌تنهایی این مرحله را تکمیل نمی‌کند.
+8. **NOT DONE — تأیید نهایی بلافاصله پیش از تغییر. FACT:** تأیید مستقل و صریح مالک درست پیش از تغییر مقصد/Go-Live وجود ندارد.
+9. **NOT DONE — rollout کنترل‌شده و پایش MAIN. FACT:** هیچ rollout به MAIN انجام نشده و هیچ مجوزی برای آن صادر نشده است؛ وضعیت امن فعلی حفظ می‌شود.
+
+### لایه‌های publishing — مقدار خوانده‌شده، نه تغییر داده‌شده
+
+- **Cloudflare Worker binding:** در نسخهٔ فعال Worker شمارهٔ 117، binding متنی PUBLISHING_ENABLED=true است (plain_text؛ مقدار secret نیست).
+- **ثابت کد Worker:** src/index.js مقدار const PUBLISHING_ENABLED = false دارد. /health و فیلد سطح بالای publishing از این ثابت استفاده می‌کنند؛ اما capabilities.publishing در /api/status از env.PUBLISHING_ENABLED === 'true' می‌آید. پس API status می‌تواند capability=true و publishing=false را هم‌زمان نشان دهد.
+- **D1 console_rules:** ردیف id=1، version=3؛ publishing_enabled=false و test_channel_only=true.
+- **Mob X config:** config/mob_official_sources.json دارای enabled=true، mode=production، production_enabled=true و max_posts_per_run=1 است؛ destination hash با pin کانال TEST یکسان است، نه مقصد MAIN. عبارت production در این فایل به‌تنهایی به معنی مقصد MAIN نیست.
+- **GitHub Actions gate:** workflowها شرط vars.RUBIKA_AGENT_MOB_X_PUBLISH_GATE_20261014 == 'approved' دارند؛ مقدار زندهٔ فعلی از منبع قابل‌خواندن این بررسی به دست نیامد، پس **UNKNOWN** است. FACT تاریخی: run زمان‌بندی‌شدهٔ [41590280323](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41590280323) در 2026-11-03 06:30 UTC job مربوط به publish-all-new-official-x-posts-in-window را اجرا کرد؛ چون شرط YAML آن فقط با gate=approved برقرار می‌شود، gate در زمان همان run approved بوده، ولی این مقدار فعلی را ثابت نمی‌کند.
+- **TikTok Actions guard:** ورودی دستی publish_four_tiktok_test به‌صورت پیش‌فرض false است؛ اجرای دستی نیازمند تأیید صریح ورودی و مقصد pin‌شدهٔ TEST است. سقف مسیر روزانه چهار ارسال موفق است.
+- **تعارض‌ها:** binding محیطی Worker=true با ثابت کد=false و مقدار D1=false هم‌جهت نیست؛ در نتیجه diagnostic capability در /api/status با publishing سطح بالا تناقض دارد. Mob X config نیز حالت production را true اعلام می‌کند ولی مقصدش test-only است. **GUESS:** بخشی از این اختلاف ممکن است فقط اختلاف گزارش‌دهی/capability باشد؛ بدون مجوز و بررسی جداگانه نباید آن را مجوز انتشار تلقی کرد. هیچ لایه‌ای در این کار تغییر نکرد.
+
+### موارد باز و دسته‌بندی
+
+**Blockers**
+- نبود تأیید صریح مالک و نبود راستی‌آزمایی مستقل MAIN.
+- تعارض لایه‌های publishing و نامعلوم‌بودن مقدار زندهٔ Actions gate.
+- نبود E2E موفق یک ویدئوی TikTok؛ آخرین Daily queue ثبت‌شده run #36 است: [41485619799](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41485619799)، یک آیتم با required_visual_or_music_check_not_passed fail-closed شد، صفر ارسال و 30 مورد queued ماند. در run #35 نیز یک pipeline_error_cobalt_http_400 ثبت شده بود.
+- نبود تأیید واقعی دکمه‌های PV در اپ Rubika؛ تست‌های mocked به‌تنهایی این مورد را تکمیل نمی‌کنند.
+- نبود آمار روزانهٔ D1/Worker/AI/Mega و شواهد کامل rollback/alert برای مرحلهٔ 7.
+
+**Non-blockers / پیشرفت معتبر**
+- **FACT:** PR #155 ادغام شد؛ نخستین Termux run زمان‌بندی‌شدهٔ بعد از آن، run #110 در 2026-11-03 09:59 UTC، SUCCESS بود: [41615475983](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41615475983). Full test suite و Termux Docker اجرا شدند؛ 48 TikTok metadata candidates، 41 eligible، 7 rejected، 2 URL جدید به صف، 39 مورد از قبل موجود؛ media_downloads=0، rubika_posts=0 و paid provider خالی. این مورد، open item «اولین اجرای طبیعی پس از #155» را می‌بندد، نه E2E ویدئو را.
+- **FACT:** PR #164، CI و Deploy Worker با SHA و runهای بالا سبز شدند.
+- **FACT:** pin مقصد TEST و fail-closed guards در workflowها/test_channel.py وجود دارند؛ هیچ guardی تضعیف نشده است.
+
+**Risks / open engineering**
+- preserve_failed_media برای Mob X wired است، اما مسیر TikTok queue_worker.py آن را فراخوانی نمی‌کند؛ helper امکان source=tiktok را می‌پذیرد ولی call-site TikTok نداریم. این wiring همچنان باز است.
+- شتاب‌دهندهٔ اختیاری گوشی برای PV هنوز تصمیم فنی نهایی ندارد: انتخاب direct token در گوشی در برابر Worker proxy، مجوز instrumentation، و انتخاب D1 در برابر Durable Object برای inbox/lease بازند. سازگاری هم‌زمان getUpdates با webhook نیز در مستند رسمی Rubika UNKNOWN مانده است.
+- مقدار فعلی Actions publishing gate قابل خواندن نیست؛ فقط مقدار تاریخی زمان run #41590280323 اثبات می‌شود.
+- وضعیت روزانهٔ ظرفیت و اجرای واقعی PV ممکن است با mockها متفاوت باشد؛ تا مشاهدهٔ مستقیم، به‌عنوان تأییدشده گزارش نمی‌شوند.
+
+### تصمیم‌ها و محدودیت‌های حفظ‌شده
+- هیچ توصیه‌ای برای پایین‌آوردن guard، دورزدن required_visual_or_music_check_not_passed یا تضعیف fail-closed وجود ندارد.
+- هیچ Secret/Variable/gate، migration، quiet_hours، D1 write دستی، manual workflow dispatch، مقصد کانال، publishing setting یا انتشار تغییر نکرد.
+- کانال MAIN قفل است. زیرنویس‌ها و PRهای #17/#23 دست‌نخورده‌اند. ITEM 8 فقط گزارش read-only است؛ هیچ Go-Live انجام نشده است.
