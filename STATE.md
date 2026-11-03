@@ -552,3 +552,74 @@ TikTok discovery runs in GitHub Actions via Termux Docker (.github/workflows/ter
 - هیچ توصیه‌ای برای پایین‌آوردن guard، دورزدن required_visual_or_music_check_not_passed یا تضعیف fail-closed وجود ندارد.
 - هیچ Secret/Variable/gate، migration، quiet_hours، D1 write دستی، manual workflow dispatch، مقصد کانال، publishing setting یا انتشار تغییر نکرد.
 - کانال MAIN قفل است. زیرنویس‌ها و PRهای #17/#23 دست‌نخورده‌اند. ITEM 8 فقط گزارش read-only است؛ هیچ Go-Live انجام نشده است.
+
+
+## 2026-11-03 — پاسخ مالک دربارهٔ MAIN، ITEM 10 و ITEM 11
+
+### تصمیم مالک / مجوز انتشار
+
+- **FACT — پاسخ صریح مالک: NO.** مالک فعلاً انتشار در کانال MAIN را تأیید نکرده است.
+- کانال MAIN قفل می‌ماند. این پاسخ هیچ مجوزی برای تغییر مقصد، flag، gate یا تنظیمات انتشار صادر نمی‌کند.
+- هیچ انتشار یا ارسال واقعی در این task انجام نشد. هیچ Secret، Variable، gate، migration، quiet_hours، manual D1 write یا workflow dispatch انجام نشد. زیرنویس‌ها و PRهای #17/#23 دست‌نخورده‌اند.
+
+### ITEM 10 — اتصال preservation به مسیر TikTok
+
+- **FACT:** در agent/brain/e2e_from_report.py مسیر روزانه از queue_worker.py وارد run_one() می‌شود. پس از نتیجهٔ Rubika با وضعیت failed یا uncertain، فایل اصلی خام Cobalt در raw/tiktok_<id>.mp4 با helper موجود preserve_failed_media و source=tiktok به Mega failed/ سپرده و از endpoint موجود Worker ثبت می‌شود.
+- فایل اصلی hard-link/copy موقت برای upload می‌گیرد؛ تابع preservation فایل اصلی را re-encode، truncate، rename یا delete نمی‌کند. نسخهٔ مربع‌شدهٔ انتشار به‌جای original استفاده نمی‌شود. در retry معتبر preserve_source، فقط کپی byte-for-byte قابل استفاده است.
+- preservation برای delivery با وضعیت sent اجرا نمی‌شود. شکست helper یا خطای بررسی فایل، نتیجه و کد خطای اصلی delivery را جایگزین نمی‌کند؛ نتیجهٔ preservation جداگانه و به‌شکل sanitized گزارش می‌شود.
+- مسیرهای پیش از دانلود و فایل‌های .part/دانلود ناقص، original کامل ندارند. ردهای عمدی validation/duplicate/moderation که pipeline فایل raw را حذف می‌کند، preservation ارسال Rubika نیست و فایل قابل نگهداری ندارد. خطای staging یا D1 sync بعد از دانلود فقط در صورتی preserve می‌شود که فایل کامل raw هنوز موجود باشد.
+- خطاهای upload/send به Rubika، از جمله رد اندازهٔ حدود 50 MiB یا سایر خطاهای قطعی/نامطمئن، preserve می‌شوند. حد 50 MiB به‌صورت محلی اضافه نشده؛ خطای Rubika همان‌طور که دریافت شده ثبت می‌شود.
+- PR #165 ادغام شد: https://github.com/hosseinasgari898989-dev/rubika-agent/pull/165
+  - Backup: backup/pre-tiktok-preserve-2026-11-03
+  - Branch: fix/tiktok-preserve-failed-media-2026-11-03
+  - نهایی PR head: 5fe33cfab5afea481008cda1d957bfe72e9f7fe2
+  - Merge SHA و rubika-agent/main: 2c6d3ca971f19682f5a1a7ff85ce4e2777681a27
+- فایل‌های تغییرکرده فقط این سه مورد بودند: agent/brain/e2e_from_report.py، tests/test_failed_tiktok_preservation.py، .github/workflows/brain-ci.yml (یک دستور برای اجرای صریح تست جدید). تست‌های mocked مسیر upload failure، فایل بالای 50 MiB، preservation failure، duplicate retry/idempotency و sent را پوشش می‌دهند؛ خطای خواندن original نیز پوشش دارد.
+- CI روی head نهایی PR سبز بود: Agent Brain [41650845141](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41650845141)، Cloud Bootstrap [41650845001](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41650845001)، Console Playwright [41650844975](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41650844975). در log، فایل test preservation واقعاً اجرا و تست‌هایش OK شدند.
+- پس از merge، Cloud Bootstrap [41651329127](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41651329127)، Console Playwright [41651329355](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41651329355) و Pages deploy [41651329268](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41651329268) SUCCESS شدند. Deploy Worker اجرا نشد، چون هیچ فایل Worker، src/** یا تنظیمات Worker تغییر نکرد؛ بنابراین Deploy Worker برای این PR not triggered / not applicable است، نه موفق یا ناموفق.
+- **Duplicate open PR:** PR #166 هم‌زمان با همان موضوع در branch fix/tiktok-failed-media-2026-11-03 ایجاد شده و هنوز OPEN است؛ head آن afbdc0a9c172bbb351ac90fdedcf77cb548ddcdb و mergeable=false است. این PR بعد از merge شدن #165 با همان محدوده هم‌پوشانی دارد و در main ادغام نشده است. برای جلوگیری از ادغام دوباره، هیچ تغییری در #166 یا بستن آن انجام نشد؛ مالک باید دربارهٔ بستن/بازبینی آن تصمیم بگیرد: https://github.com/hosseinasgari898989-dev/rubika-agent/pull/166
+
+### ITEM 11 — علت توقف Daily queue با required_visual_or_music_check_not_passed
+
+#### محل guard و قرارداد pass/fail
+
+- **FACT:** در agent/brain/e2e_from_report.py، پس از staging و moderation، required_checks از has_music=true شروع می‌شود. برای هر source policy که require_poppy_relevance_check=true دارد، is_poppy_playtime=true هم لازم می‌شود. guard هر کلید را با مقایسهٔ هویت boolean (is) می‌سنجد؛ فیلد غایب، null، مقدار غیر boolean یا false، pass نمی‌شود و نتیجه brain_checks_not_publishable با reason=required_visual_or_music_check_not_passed است.
+- **FACT:** هر شش TikTok source در config/tiktok_source_policy.json دارای require_poppy_relevance_check=true هستند.
+- **FACT:** music moderator در agent/brain/vision_moderator.py audio-only است: ویدئو را با ffmpeg به نمونهٔ MP3 مونو/16 kHz تا سقف 60 ثانیه تبدیل می‌کند و فقط soundtrack audio را به Worker می‌فرستد؛ نه فریم تصویر می‌فرستد و نه is_poppy_playtime برمی‌گرداند.
+- **FACT:** در src/index.js، تصمیم موسیقی از @cf/cloudflare/clef-omni با probability گرفته می‌شود: p >= 0.70 نتیجهٔ has_music=true؛ p <= 0.15 نتیجهٔ false؛ و بازهٔ 0.15 < p < 0.70 نتیجهٔ null و reason=music_probability_ambiguous است. مقدار گمشده/نامعتبر reason جداگانهٔ music_answer_missing_or_invalid دارد.
+- **FACT:** has_music=false با وجود audio stream رد موسیقی می‌شود؛ has_music=null/فیلد غایب به‌عنوان check ناموجود نیازمند review است. guard فقط probability را نمی‌سنجد؛ boolean has_music باید دقیقاً true باشد.
+- **FACT:** moderator فعلی هیچ classifier بصری ندارد؛ بنابراین چک تصویری مورد نیاز policy قابل تولید نیست. چهار نتیجهٔ required_visual_or_music_check_not_passed در این شش run، از شکاف میان config اجباری is_poppy_playtime و moderator صوتی ناشی می‌شوند، نه از probability موسیقی.
+
+#### آیتم‌های بررسی‌شده در artifactهای واقعی #31–#36
+
+| Run | TikTok item | نتیجه | احتمال موسیقی / sub-check |
+|---|---|---|---|
+| [#31](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/40700363624) | 7701171449205247238 | music_probability_ambiguous | مقدار عددی در artifact/D1 ذخیره نشده؛ از reason و قاعدهٔ live، بازهٔ 0.15 < p < 0.70 است؛ music check نامطمئن |
+| [#32](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/40886826417) | 7701736317968715028 | required_visual_or_music_check_not_passed | p=0.8628، has_music=true؛ is_poppy_playtime مفقود |
+| [#32](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/40886826417) | 7701511937586187538 | music_probability_ambiguous | مقدار عددی در artifact/D1 ذخیره نشده؛ بازهٔ inferred برابر 0.15 < p < 0.70؛ music check نامطمئن |
+| [#33](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41066926726) | 7701939105051004168 | required_visual_or_music_check_not_passed | p=0.9474، has_music=true؛ is_poppy_playtime مفقود |
+| [#34](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41205322518) | 7702518409187118356 | music_probability_ambiguous | مقدار عددی در artifact/D1 ذخیره نشده؛ بازهٔ inferred برابر 0.15 < p < 0.70؛ music check نامطمئن |
+| [#35](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41314434060) | 7702922378208169224 | required_visual_or_music_check_not_passed | p=0.9269، has_music=true؛ is_poppy_playtime مفقود |
+| [#35](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41314434060) | 7702848466682137908 | pipeline_error_cobalt_http_400 | خطای Cobalt پیش از moderation؛ probability قابل اعمال نیست |
+| [#36](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41485619799) | 7703251923641715989 | required_visual_or_music_check_not_passed | p=0.9236، has_music=true؛ is_poppy_playtime مفقود |
+
+- **FACT:** چهار آیتم بصری فوق در D1 با status=ready و review_state=pending دیده شدند؛ moderation_json هرکدام has_music=true و probability بالا را داشت، اما is_poppy_playtime در JSON وجود نداشت. اعتبارسنجی رسانه‌های این چهار مورد سالم بود: 576×576، audio/video stream معتبر، مدت 15.1 تا 29.2333 ثانیه و فایل 588,168 تا 2,999,833 بایت.
+- **FACT:** سه مورد music_probability_ambiguous مقدار دقیق probability را در artifact یا D1 ثبت نکرده‌اند. تحلیل logهای Actions هم عددی ارائه نکرد. query فقط‌خواندنی Cloudflare Observability برای music_moderation_diagnostic در پنجرهٔ این runها هیچ eventی برنگرداند؛ بنابراین مقدار عددی و امکان مقایسهٔ تکرار مدل از دست رفته است.
+- **FACT:** در #35، خطای cobalt_http_400 از moderation جداست و در مرحلهٔ دانلود رخ داده؛ این run دو failure مستقل داشت.
+- **FACT:** هر شش artifact در summary صفر ارسال موفق نشان می‌دهند؛ تعداد صف‌های queued پس از اجرا حدود 30 مانده است. از API GitHub در تاریخ 2026-11-03، هیچ Daily Rubika queue run جدیدتر از #36 پیدا نشد.
+- **FACT:** الگوی چهار خطای بصری یکسان و deterministic است: موسیقی قبول شده، کلید تصویری اجباری موجود نیست. این الگو flaky به نظر نمی‌رسد.
+- **FACT:** سه مورد ambiguous فقط به‌عنوان بازهٔ بین دو threshold قابل طبقه‌بندی‌اند؛ چون مقدار خام ذخیره نشده، نمی‌توان گفت مدل بین اجراها flaky بوده یا ورودی‌های مختلف واقعاً در منطقهٔ نامطمئن بوده‌اند.
+- **GUESS:** علت اصلی توقف‌های required_visual_or_music_check_not_passed یک mismatch در قرارداد داده است: TikTok policy چک تصویری را الزام می‌کند، ولی تنها moderator متصل audio-only است. این فرضیه با مقادیر persisted و کد زنده پشتیبانی قوی دارد.
+
+#### کوچک‌ترین اصلاح‌های امن پیشنهادی — اجرا نشده
+
+1. **برای visual requirement:** یک classifier بصری مستقل و fail-closed طراحی/اضافه شود که تعداد محدودی فریم کم‌وضوح و از پیش تعیین‌شده را ارزیابی کند و فقط در صورت نتیجهٔ قطعی is_poppy_playtime=true اجازهٔ عبور دهد. false، unknown، خطای مدل یا پاسخ ناقص همچنان fail-closed بماند. is_poppy_playtime را از caption/hashtag یا موسیقی جعل نکنیم؛ کد/تست و اتصال جداگانه لازم است.
+2. **برای music ambiguity:** thresholdهای 0.70 و 0.15 بدون تصمیم صریح مالک تغییر نکنند. کوچک‌ترین اصلاح تشخیصی این است که probability خام، model، reason و uncertainty برای هر item در report/D1 ذخیره یا sanitized logging شود؛ وضعیت نامطمئن همچنان needs_review/fail-closed بماند. هیچ مقدار ambiguous خودکار به true ارتقا پیدا نکند.
+3. **برای Cobalt HTTP 400:** به‌عنوان خطای مستقل downloader بررسی شود؛ فقط code/response class پاک‌سازی‌شده ثبت شود. retry صرفاً برای خطاهای transient شناخته‌شده و پس از شناسایی علت؛ retry عمومی کور برای همهٔ HTTP 400 پیشنهاد نمی‌شود.
+4. هیچ‌کدام از پیشنهادهای بالا در ITEM 11 پیاده‌سازی نشده‌اند. هیچ threshold یا guardی پایین آورده یا دور زده نشده است.
+
+### محدودیت‌ها و موارد پیگیری
+
+- PR #166 duplicate مربوط به ITEM 10 هنوز باز است و mergeable=false؛ مالک باید دربارهٔ بستن/بازبینی آن تصمیم بگیرد. PR #165 از قبل در main است.
+- برای تکمیل E2E TikTok، پس از پیاده‌سازی جداگانهٔ classifier بصری و حفظ آستانه‌ها، باید دادهٔ diagnostics خام/معتبر ذخیره و اجرای طبیعی بعدی فقط در کانال TEST مشاهده شود. تا آن زمان required_visual_or_music_check_not_passed باید fail-closed بماند.
+- این ثبت صرفاً مستنداتی است. هیچ code/config/Secret/Variable/gate/migration/quiet_hours یا تنظیم مقصد انتشار در این task تغییر نکرد؛ D1 فقط SELECT شد و rows_written=0 و changed_db=false گزارش شد. کانال MAIN همچنان قفل است. زیرنویس‌ها و PRهای #17/#23 untouched هستند.
