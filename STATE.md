@@ -660,4 +660,4 @@ do NOT build a visual classifier. The 6 owner-selected TikTok sources plus the c
 - **SHA:** rubika-agent/main اکنون a2ca032fb6b0c0a2705f954bc3de12f8100bc224 است. Backup قبل از کد: backup/pre-visual-guard-2026-11-03 با SHA پایه ea6fa127035504f8260e1d318eff1e18f3b913eb.
 - **PR #166:** همچنان OPEN و untouched است؛ head آن afbdc0a9c172bbb351ac90fdedcf77cb548ddcdb باقی مانده. PRهای #17/#23 و subtitle files نیز دست‌نخورده‌اند.
 - هیچ Worker source، config، آستانهٔ موسیقی 0.70/0.15، ambiguity rule، captions، owner approval/destination guard یا سایر guards تغییر نکرد. هیچ Secret، Variable، gate، migration، quiet_hours، D1 write دستی، manual workflow dispatch یا publishing انجام نشد؛ کانال MAIN قفل باقی است.
-- سند ممیزی Part 1: ITEM-13-MUSIC-AUDIT.md؛ Center PR ثبت ممیزی: #40. Backup ثبت final-state update: backup/pre-item-13-final-state-2026-11-03.
+- سند ممیزی Part 1: ITEM-13-MUSIC-AUDIT.md؛ Center PR ثبت ممیزی: #40. Center PR ثبت final-state update: [#41](https://github.com/hosseinasgari898989-dev/CENTER/pull/41). Backup ثبت final-state update: backup/pre-item-13-final-state-2026-11-03.
