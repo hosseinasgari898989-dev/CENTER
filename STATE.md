@@ -633,4 +633,5 @@ TikTok discovery runs in GitHub Actions via Termux Docker (.github/workflows/ter
 - **FACT:** برآورد طراحی پنج فریم: Cloudflare حدود 5 call/video و 60–80 Neurons/video (فرض توکن نامطمئن)؛ حداکثر 20 candidate/day یعنی 100 calls و حدود 1,200–1,600 Neurons/day؛ backlog سی‌تایی حدود 150 calls و 1,800–2,400 Neurons. Groq با 3 تصویر/request حدود 2 calls/video و سقف داخلی 200/day؛ OpenRouter پنج call/video در فرض محافظه‌کارانه و سقف داخلی/Free برابر 50/day. جزئیات در سند ITEM 12 است.
 - **پیشنهاد:** گزینه A: visual classifier مستقل Cloudflare Workers AI با پنج فریم و fail-closed؛ تا تأیید تصمیم‌های مالک، guard حفظ و هیچ TikTokی با فقدان is_poppy_playtime عبور داده نشود.
 - سند بررسی: ITEM-12-TIKTOK-VISUAL-REVIEW.md. Branch: docs/item-12-tiktok-visual-review-2026-11-03. Backup: backup/pre-item-12-2026-11-03.
+- PR مستنداتی CENTER: [#39](https://github.com/hosseinasgari898989-dev/CENTER/pull/39)؛ فقط دو فایل Markdown تغییر کرده‌اند و diff کامل پیش از merge بررسی شد.
 - rubika-agent/main روی SHA 2c6d3ca971f19682f5a1a7ff85ce4e2777681a27 ماند. هیچ کد/تنظیم/Secret/gate/migration/quiet_hours، D1 write، workflow dispatch، publish یا تغییر کانال انجام نشد. MAIN همچنان قفل است.
