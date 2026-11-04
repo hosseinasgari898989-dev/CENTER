@@ -809,6 +809,7 @@ Nothing else: no other secret, no variables, no gates, no D1 writes, no main cha
 - Queue snapshot before any write: 30 queued, 58 failed, 22 sent, 7 skipped; UTC sent_today=0. All D1 queries were SELECT-only (`rows_written=0`, `changed_db=false`).
 - **STOP — cleanup preflight:** SELECT-based D1 staging inventory found 29 distinct direct-child video paths whose references are all `sent` and older than 24 hours, exceeding the task's 25-path STOP threshold. Status grouping: 29 sent candidate paths; 45 ready paths and 1 uncertain path are protected. The exact cleanup plan remains UNKNOWN because `storage_cleanup.py` reads a separate MegaLedger snapshot and the live MEGA staging directory; D1 cannot establish which candidate files currently exist or reconstruct that exact plan. Therefore no D1 write/requeue and no Daily dispatch or cleanup was performed.
 - No item outside the two approved IDs was changed; MAIN was never used. No retry, publish, code/workflow/config change, secret/variable/gate change, migration, or quiet_hours change occurred.
+
 ## 2026-11-04 — Controlled Daily proof run #40 (TEST only; one dispatch)
 
 - **OWNER EXCEPTION — this run only:** owner explicitly authorized one manual dispatch of `Daily Rubika queue processor` to TEST with the normal `storage_cleanup --apply` step, expressly overriding BRAIN.md's no-manual-dispatch rule for this single run. This exception does not authorize any later manual dispatch.
