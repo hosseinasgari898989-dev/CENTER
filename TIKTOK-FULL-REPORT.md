@@ -197,3 +197,119 @@
 ## وضعیت تغییرات در این ITEM
 
 **FACT:** rubika-agent/main در SHA بالا بدون تغییر باقی ماند. هیچ code/config/secret/variable/gate/quiet_hours/migration، D1 write، manual dispatch، publishing یا تغییر مقصد انجام نشد. D1 فقط SELECT شد و rows_written=0 / changed_db=false گزارش شد. کانال MAIN قفل است. PRهای #17، #23 و #166 و فایل‌های subtitle دست‌نخورده‌اند. این سند فقط گزارشی است؛ هیچ شرط انتشار را تغییر نمی‌دهد.
+
+
+---
+
+## 7) ITEM 16B — تفکیک شمارنده‌ها، وضعیت همهٔ صف‌ها و خطاهای قدیمی
+
+**تاریخ snapshot:** 2026-11-04  
+**نسخهٔ rubika-agent/main:** c6e5035c343135b97f5ee7766d2cf8b0e3757dbe  
+**روش:** SELECT مستقیم روی D1؛ هیچ endpoint تغییر‌دهنده‌ای فراخوانی نشد.
+
+### 7.1 چرا «pending=32» با «۲ TikTok queued» فرق دارد؟
+
+**FACT:** شمارنده‌های صف پنل از جدول automation_queue می‌آیند. panel_screens.js وضعیت‌های واقعی را queued / processing / sent / failed / uncertain / skipped می‌خواند و به‌ترتیب برچسب‌های «در انتظار / در حال پردازش / ارسال‌شده / ناموفق / نامشخص / ردشده» را نمایش می‌دهد. homeSummary نیز queued و failed را مستقیم از همین جدول می‌گیرد. در نتیجه واژهٔ «pending» در گزارش مالک، معادل وضعیت دیتابیسی queued است؛ وضعیت مستقلی به نام pending در automation_queue وجود ندارد.  
+شاهد: [panel_screens.js L4-L5](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/src/panel_screens.js#L4-L5)، [L45-L70](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/src/panel_screens.js#L45-L70)، [L105-L127](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/src/panel_screens.js#L105-L127).
+
+| شمارندهٔ پنل | status واقعی در D1 | تعداد |
+|---|---|---:|
+| pending / در انتظار | automation_queue.queued | 32 |
+| processing | automation_queue.processing | 0 |
+| sent | automation_queue.sent | 22 |
+| failed | automation_queue.failed | 56 |
+| unknown / نامشخص | automation_queue.uncertain | 0 |
+| rejected / ردشده | automation_queue.skipped | 7 |
+| **کل صف** | **تمام statusهای automation_queue** | **117** |
+
+**FACT:** از ۳۲ مورد در انتظار، فقط ۲ مورد TikTok هستند و ۳۰ مورد YouTube. پس گزارش ITEM 16 که «۲ TikTok queued» گفت درست بود، اما آن عدد کل صف نبود.  
+**FACT:** «rejected=7» در این شمارنده نام نمایشی skipped است، نه console_jobs.status='rejected'. در جدول مستقل console_jobs دقیقاً ۲ job از نوع mob_x_link با status=rejected ثبت شده؛ آن دو داخل ۱۱۷ مورد صف نیستند.
+
+### 7.2 تعداد به تفکیک جدول، پلتفرم و منبع
+
+**FACT — automation_queue؛ شمارندهٔ اصلی پنل:**
+
+| TikTok source_key | queued | processing | sent | failed | uncertain | skipped | کل |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| meloaep_ | 1 | 0 | 1 | 17 | 0 | 3 | 22 |
+| menezxl9 | 0 | 0 | 5 | 8 | 0 | 0 | 13 |
+| poppytv_ae | 1 | 0 | 5 | 15 | 0 | 0 | 21 |
+| rickkzn_ | 0 | 0 | 5 | 7 | 0 | 1 | 13 |
+| saylex.aep812 | 0 | 0 | 5 | 8 | 0 | 0 | 13 |
+| smyxae | 0 | 0 | 1 | 1 | 0 | 3 | 5 |
+| **TikTok** | **2** | **0** | **22** | **56** | **0** | **7** | **87** |
+| **YouTube** | **30** | **0** | **0** | **0** | **0** | **0** | **30** |
+| **Mob X / mob_official** | **0** | **0** | **0** | **0** | **0** | **0** | **0** |
+| **Instagram / سایر پلتفرم‌ها** | **0** | **0** | **0** | **0** | **0** | **0** | **0** |
+| **کل automation_queue** | **32** | **0** | **22** | **56** | **0** | **7** | **117** |
+
+**FACT:** هر ۳۰ مورد YouTube فقط queued هستند. queue worker فعلی فقط PLATFORMS=("tiktok") را پردازش می‌کند؛ بنابراین این ردیف‌های قدیمی YouTube در مسیر فعلی TikTok قرار نمی‌گیرند و در صف باقی می‌مانند.  
+شاهد: [queue_worker.py L20-L25](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/agent/brain/queue_worker.py#L20-L25).
+
+**FACT — جدول مستقل items؛ این وضعیت‌ها را با automation_queue جمع نکنید:**
+
+| platform / source_key | ready | sent | uncertain | کل |
+|---|---:|---:|---:|---:|
+| TikTok meloaep_ | 10 | 4 | 0 | 14 |
+| TikTok menezxl9 | 6 | 5 | 0 | 11 |
+| TikTok poppytv_ae | 11 | 5 | 0 | 16 |
+| TikTok rickkzn_ | 7 | 5 | 0 | 12 |
+| TikTok saylex.aep812 | 8 | 5 | 0 | 13 |
+| TikTok smyxae | 1 | 1 | 0 | 2 |
+| TikTok s2gryder (legacy/غیر از شش منبع فعلی) | 0 | 4 | 1 | 5 |
+| **TikTok items** | **43** | **29** | **1** | **73** |
+| Mob X mobgamesstudios | 8 | 11 | 0 | 19 |
+| Mob X x.com/mobgamesstudios | 0 | 6 | 0 | 6 |
+| Mob X mobentertainment.com | 0 | 1 | 0 | 1 |
+| **Mob X items** | **8** | **18** | **0** | **26** |
+| **کل items** | **51** | **47** | **1** | **99** |
+
+**FACT:** در snapshot فعلی، items هیچ ردیف YouTube و هیچ status=failed ندارد. ۵۱ ready در این جدول با ۳۲ queued در جدول صف یکی نیست. ۴ مورد sent و ۱ مورد uncertain برای s2gryder نیز در دادهٔ موجود باقی‌اند؛ این handle جزو شش منبع فعلی config نیست.
+
+**FACT — Mob X jobها، جدول سوم و مستقل:**
+
+| console_jobs.type=mob_x_link | تعداد |
+|---|---:|
+| failed | 11 |
+| ready_for_review | 6 |
+| rejected | 2 |
+| sent | 11 |
+| **کل jobها** | **30** |
+
+این ۳۰ job نیز جزو شمارندهٔ ۱۱۷تایی automation_queue نیستند.
+
+### 7.3 گروه‌بندی ۵۶ failed و ۷ skipped بر اساس error/reject code
+
+بازه‌ها UTC هستند و از automation_queue.updated_at گرفته شده‌اند؛ یعنی بازهٔ آخرین به‌روزرسانی همان گروه، نه ادعای دقیق زمان وقوع خطا. تمام ۵۶ ردیف failed در snapshot مقدار attempt_count=1 دارند.
+
+| status / code | تعداد | منبع‌ها | اولین updated_at | آخرین updated_at |
+|---|---:|---|---|---|
+| failed — required_visual_or_music_check_not_passed | 43 | poppytv_ae 11، meloaep_ 10، saylex.aep812 8، rickkzn_ 7، menezxl9 6، smyxae 1 | 2026-10-24 11:53:56 | 2026-11-03 14:54:40 |
+| failed — music_probability_ambiguous | 8 | meloaep_ 5، poppytv_ae 3 | 2026-10-24 11:54:12 | 2026-11-03 14:54:29 |
+| failed — pipeline_error_cobalt_http_400 | 3 | menezxl9 2، poppytv_ae 1 | 2026-10-20 00:17:07 | 2026-11-01 14:06:55 |
+| failed — music_not_detected | 1 | meloaep_ 1 | 2026-10-25 12:27:34 | 2026-10-25 12:27:34 |
+| failed — staging_failed | 1 | meloaep_ 1 | 2026-10-14 17:02:21 | 2026-10-14 17:02:21 |
+| **جمع failed** | **56** | **شش source منتخب TikTok** | **2026-10-14** | **2026-11-03** |
+| skipped — already_seen_or_unavailable | 7 | meloaep_ 3، smyxae 3، rickkzn_ 1 | 2026-10-14 17:02:22 | 2026-10-20 00:17:28 |
+
+**FACT:** علت دقیق ردیف staging_failed از D1 قابل بازسازی نیست. ردیف متناظر در items و رخداد brain_events با همان item ID یافت نشد؛ فقط یک run قدیمی با staged=0 و skipped=1 ثبت شده است. بنابراین نسبت دادن آن به FFmpeg **UNKNOWN** است.
+
+### 7.4 Retry، دو اصلاح قبلی و requeue
+
+**FACT — visual-field / PR #167:** هر ۴۳ مورد required_visual_or_music_check_not_passed آخرین بار حداکثر تا ۳ نوامبر ساعت 14:54:40 UTC ثبت شده‌اند؛ PR [#167](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/167) ساعت 18:44:04 UTC همان روز merge شد و شرط بصری مانده را از gate نهایی TikTok حذف کرد. پس این ۴۳ ردیف با guard قدیمی شکست خورده‌اند. **GUESS:** اگر مالک بعداً همان ردیف‌ها را دستی requeue کند، این خطای قدیمی دیگر به‌تنهایی مانع نیست؛ اما هر ردیف همچنان باید keyword، audio stream و music=true را از guard فعلی بگذراند. موفقیت ارسال تضمین نمی‌شود.
+
+**FACT — FFmpeg / PR #155:** PR [#155](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/155) در ۳ نوامبر ساعت 08:24:38 UTC merge شد. علتش FileNotFoundError: ffmpeg در تست‌های کامل workflow کشف Termux بود؛ مرحلهٔ test suite پیش از اجرای Docker discovery، report push و queue intake شکست می‌خورد. اصلاح، نصب ffmpeg/ffprobe و بررسی libass قبل از اجرای تست‌ها بود. این تغییر، خطای خود pipeline صف را تعمیر یا ردیف failed را requeue نمی‌کند. **FACT:** هیچ‌یک از ۵۶ error code فعلی نام FFmpeg ندارد و query روی brain_events نیز موردی با code/details حاوی ffmpeg پیدا نکرد. بنابراین هیچ‌یک از ۵۶ مورد را نمی‌توان به bug رفع‌شدهٔ #155 نسبت داد. staging_failed قدیمی همچنان **UNKNOWN** می‌ماند.
+
+**FACT — retry داخلی:** recovery فقط خطاهای موقتِ allow-list مانند control_api_unreachable، برخی control_api_http_*، music_api_timeout و music_transcode_timeout را حداکثر یک بار retry می‌کند. هیچ‌کدام از پنج کد failure جدول بالا در این allow-list نیستند؛ در نتیجه هیچ‌کدام از ۵۶ ردیف در وضعیت فعلی retry خودکارِ داخلی ندارند. music_probability_ambiguous و music_not_detected رد محتوایی‌اند؛ cobalt_http_400 در allow-list نیست؛ staging_failed هم علت نامعلوم و بدون retry خودکار است.  
+شاهد: [recovery.py L14-L64](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/agent/brain/recovery.py#L14-L64).
+
+**FACT — intake عادی:** _existing_queue_inventory تمام statusهای صف، از جمله failed و skipped را می‌خواند و ID موجود را به فهرست شناسه‌های قبلی اضافه می‌کند. سپس ingest با قید یکتای (platform, external_id) و ON CONFLICT DO NOTHING انجام می‌شود. بنابراین discovery عادی فقط IDهای تازه را وارد می‌کند؛ failedها به‌طور خودکار دوباره وارد صف نمی‌شوند.  
+شاهد: [queue_intake.py](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/agent/brain/queue_intake.py)، [src/index.js L1236-L1303](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/src/index.js#L1236-L1303).
+
+**FACT — requeue دستی:** کنسول API عملیات جداگانهٔ requeue دارد که یک رکورد موجود با status=failed، uncertain یا skipped را دوباره queued می‌کند و last_error_code را پاک می‌کند. این کار دستی و صریح است؛ retry_now پشتیبانی نمی‌شود. در ITEM 16B این عملیات اجرا نشد و هیچ ردیفی تغییر نکرد.  
+شاهد: [console_api.js L227-L245](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/src/console_api.js#L227-L245).
+
+### 7.5 محدودیت و صحت snapshot
+
+**FACT:** جمع ۱۱۷تایی D1 دقیقاً با شمارنده‌های اعلام‌شدهٔ پنل برابر است: queued=32, processing=0, sent=22, failed=56, uncertain=0, skipped=7. این آمار از automation_queue است؛ وضعیت‌های items و console_jobs جدا هستند.  
+**FACT:** همهٔ queryها SELECT مستقیم بودند؛ پاسخ‌های D1 همگی rows_written=0 و changed_db=false داشتند. هیچ retry، requeue، حذف، تغییر کد/config، dispatch یا publishing انجام نشد. MAIN همچنان locked.
