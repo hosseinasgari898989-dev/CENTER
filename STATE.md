@@ -685,4 +685,5 @@ do NOT build a visual classifier. The 6 owner-selected TikTok sources plus the c
 - **FACT:** تمام D1 دسترسی‌ها SELECT-only بودند؛ rows_written=0 و changed_db=false. هیچ code/config/secret/variable/gate/quiet_hours/migration، dispatch، publishing یا تغییر مقصد انجام نشد.
 - **FACT:** rubika-agent/main بدون تغییر روی SHA c6e5035c343135b97f5ee7766d2cf8b0e3757dbe باقی ماند. MAIN locked؛ PRهای #17/#23/#166 و subtitle files untouched.
 - **Open:** منتظر اولین Daily طبیعی پس از #167 برای اثبات end-to-end در TEST؛ تصمیم مالک دربارهٔ مصرف tiktok_to_rubika_enabled، پاک‌کردن یا نگه‌داشتن flag قدیمی require_poppy_relevance_check و هرگونه تغییر احتمالی آستانه‌ها فقط با تأیید جداگانه لازم است.
+- **PR:** [CENTER #43](https://github.com/hosseinasgari898989-dev/CENTER/pull/43) — docs-only؛ فایل‌های تغییرکرده فقط STATE.md و TIKTOK-FULL-REPORT.md هستند.
 - **CENTER backup:** backup/pre-item-16-tiktok-full-report-2026-11-04؛ branch: docs/item-16-tiktok-full-report-2026-11-04. rubika-agent هیچ branch یا PR جدیدی برای این گزارش نگرفت.
