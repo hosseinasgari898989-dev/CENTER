@@ -313,3 +313,63 @@
 
 **FACT:** جمع ۱۱۷تایی D1 دقیقاً با شمارنده‌های اعلام‌شدهٔ پنل برابر است: queued=32, processing=0, sent=22, failed=56, uncertain=0, skipped=7. این آمار از automation_queue است؛ وضعیت‌های items و console_jobs جدا هستند.  
 **FACT:** همهٔ queryها SELECT مستقیم بودند؛ پاسخ‌های D1 همگی rows_written=0 و changed_db=false داشتند. هیچ retry، requeue، حذف، تغییر کد/config، dispatch یا publishing انجام نشد. MAIN همچنان locked.
+
+
+---
+
+## 8) ITEM 17 — ممیزی YouTube queue، حذف کنسول، Daily و discovery gate (READ-ONLY)
+
+**Snapshot:** 2026-11-04، پس از اجرای Termux شمارهٔ 113 و پیش از Daily ساعت 07:00 UTC  
+**نسخه:** `rubika-agent/main = c6e5035c343135b97f5ee7766d2cf8b0e3757dbe`  
+**روش:** فقط SELECT مستقیم روی D1؛ تمام پاسخ‌های query دارای `rows_written=0` و `changed_db=false` بودند.
+
+### 8.1 منشأ ۳۰ ردیف YouTube و روش استخراج
+
+**FACT — وضعیت فعلی D1:** دقیقاً ۳۰ ردیف `automation_queue` برای YouTube وجود دارد؛ هر ۳۰ مورد `queued`، با `attempt_count=0` هستند. هر ۳۰ مورد `method=termux_ytdlp_search_metadata`، `published_at=NULL` و `freshness_verified=0` دارند. در جدول lifecycle مستقل `items` هیچ ردیف YouTube وجود ندارد. پس این‌ها metadataهای ورودی صف‌اند، نه ویدئوهایی که دانلود/پردازش شده باشند.
+
+**FACT — سه ورودی اولیه در ۱۴ اکتبر ۲۰۲۶ (UTC):**
+- [Queue intake run #1](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/38559494829)، ساعت 11:51:06Z: گزارش ۴۹ مورد را دریافت و ۴۹ مورد را وارد کرد؛ D1 برای همین دقیقه ۲۵ ردیف YouTube ساخته‌شده دارد.
+- [Queue intake run #2](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/38564609616)، ساعت 12:32:40Z: از ۴۹ مورد دریافتی، ۴ مورد جدید وارد و ۴۵ مورد تکراری شناخته شدند؛ D1 در 12:33 چهار ردیف YouTube دارد.
+- [Queue intake run #3](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/38570071776)، ساعت 13:13:56Z: از ۴۹ مورد، ۲ مورد جدید وارد و ۴۷ مورد تکراری شناخته شدند؛ D1 در 13:14 یک ردیف YouTube دارد. ردیف دوم آن اجرا YouTube نیست.
+- جمع D1: ۲۵ + ۴ + ۱ = **۳۰ YouTube**. هر سه اجرا مربوط به workflow قدیمی `.github/workflows/queue-intake.yml` بودند که روی push گزارش به شاخهٔ آزمایشی `agent-brain-mega-v1` اجرا می‌شد؛ نه workflow جدید Termux در نوامبر.
+
+**FACT — queryها و source_keyهای فعلی (source_key نام سازنده/کانال ثبت‌شده در metadata است):**
+
+| عبارت جست‌وجو | تعداد | کانال‌ها |
+|---|---:|---|
+| `CatNap Poppy Playtime edit short` | 9 | Lazzy Playtime، LOPI_Cc and ZedroxX، Cougar macdowall Va، GH'S، RayoxzxOFC، ABeast، Horror Skunx، Mob Entertainment، Lupus |
+| `Huggy Wuggy edit shorts` | 12 | MemeEver، Poppy Boy، Temmmu، Lime360VR، Xeyal2010 and Kairo، GH'S، HanzMiaRZ، Coram Edith، Multo0641، SirAlienGaming، Efping، M2 ANIMATION |
+| `Poppy Playtime edit shorts` | 9 | Efping، RNX87، GH'S، Dangeist، Tusker، Shadow milkᯓ★ |
+
+**FACT — روش واقعی اجراشده:** کد تاریخی `agent/discovery/termux_sources.py` تابع `discover_youtube_metadata` را به‌صورت metadata-only تعریف می‌کند: `ytsearch`، `extract_info(..., download=False)`، گزینه‌های `skip_download=true` و `extract_flat=true`. docstring همان فایل صریحاً می‌گوید cookies ورود، proxy، عبور از browser challenge و دانلود رسانه استفاده نمی‌شود. گزارش Termux هم mode را `metadata_only_no_download_no_publish` ثبت می‌کرد. شواهد: [کد تاریخی YouTube metadata discovery](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/5defc843516f749414e65a73ffe8029dbc63cfdb/agent/discovery/termux_sources.py#L812-L864)، [workflow قدیمی queue-intake](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/5defc843516f749414e65a73ffe8029dbc63cfdb/.github/workflows/queue-intake.yml).
+
+**FACT / GUESS دربارهٔ sign-in:** روش موفق برای این ۳۰ مورد فقط استخراج metadata با yt-dlp بوده، نه دانلود ویدئو. هیچ مدرکی وجود ندارد که Cobalt، relay یا cookies برای این ۳۰ مورد دانلودی انجام داده باشند. Cobalt در downloader فعلی YouTube را پشتیبانی نمی‌کند؛ مسیر دانلود واقعی YouTube در `e2e_from_report.py` از `YouTubeRelayDownloader` می‌گذرد، اما قبل از آن `delivery_enabled("youtube")` بررسی می‌شود. در `config/tiktok_source_policy.json` فقط `tiktok_to_rubika_enabled=true` وجود دارد و `delivery_enabled("youtube")` مقدار false می‌دهد؛ در نتیجه مسیر فعلی با `youtube_delivery_paused_by_owner` متوقف می‌شود. شواهد: [source_policy.py](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/agent/source_policy.py)، [config](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/config/tiktok_source_policy.json)، [YouTube delivery guard و relay](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/agent/brain/e2e_from_report.py#L346-L398)، [Cobalt platform guard](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/agent/brain/downloaders.py#L83-L114).  
+**GUESS / توضیح محتمل sign-in:** چون آن jobها فقط جست‌وجوی عمومی metadata کردند و `download=False` بود، اصلاً به درخواست media stream که می‌توانست sign-in بخواهد نرسیدند. این شاهدی برای رفع محدودیت sign-in در دانلود واقعی نیست. توانایی دانلود این ویدئوها بدون احراز هویت از این داده‌ها **UNKNOWN** است.
+
+### 8.2 حذف از Web console: حذف واقعی یا تغییر status؟
+
+**FACT — مقایسهٔ شمارنده‌ها:** در snapshot قبلی ITEM 16B تعداد YouTube برابر ۳۰ queued بود؛ SELECT فعلی نیز ۳۰ queued و صفر در statusهای دیگر نشان می‌دهد. تمام ۳۰ ردیف فعلی همان بازهٔ ایجاد ۱۴ اکتبر را دارند. در `brain_events` نیز هیچ رویداد `console_queue_delete` پیدا نشد. بنابراین شواهد D1 هیچ حذف موفق/کاهش خالصی از این ۳۰ ردیف را نشان نمی‌دهد؛ نمی‌توان از روی این داده دانست مالک روی چه دکمه‌ای کلیک کرده یا درخواستش ناموفق/لغو شده است.
+
+**FACT — رفتار کد:** Web console در `docs/console/v2.html` برای دکمهٔ حذف، `POST /api/console/queue/{id}/action` با body برابر `{action:"delete"}` می‌فرستد ([L253-L257](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/docs/console/v2.html#L253-L257)). Worker آن را در `src/console_api.js` در route `POST /queue/{id}/action` می‌گیرد و در حالت delete دقیقاً `DELETE FROM automation_queue WHERE id=? AND status IN ('queued','failed','skipped')` اجرا می‌کند ([L227-L252](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/src/console_api.js#L227-L252)). پس اگر درخواست موفق شود، ردیف واقعاً از جدول حذف می‌شود؛ فقط status عوض نمی‌شود. سپس باید رویداد `console_queue_delete` در `brain_events` ثبت شود؛ این snapshot رویدادی با آن code ندارد.
+
+### 8.3 آیا Daily ساعت 07:00 به YouTube دست می‌زند؟
+
+**FACT:** schedule فایل `daily-queue-processor.yml` برابر `0 7 * * *` UTC است و worker با سقف ۲۰ candidate attempt اجرا می‌شود ([L3-L5](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/.github/workflows/daily-queue-processor.yml#L3-L5)، [L190-L198](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/.github/workflows/daily-queue-processor.yml#L190-L198)).
+
+**FACT — ترتیب واقعی claim:** `CloudState.get_automation_queue(status="queued", limit=100)` همهٔ پلتفرم‌ها را از `GET /api/brain/automation-queue?status=queued` می‌خواند؛ SQL Worker فقط status را فیلتر می‌کند و platform filter ندارد ([cloud_state.py L420-L433](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/agent/brain/cloud_state.py#L420-L433)، [index.js L1324-L1351](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/src/index.js#L1324-L1351)). اما `queue_worker.py` فقط `PLATFORMS=("tiktok",)` را پشتیبانی می‌کند، TikTok را اول sort می‌کند، و هر پلتفرم دیگر را قبل از API claim با `platform_paused` و `queue_state=left_queued` deferred می‌کند؛ status و attempt_count آن‌ها تغییر نمی‌کند ([L21-L25](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/agent/brain/queue_worker.py#L21-L25)، [L217-L268](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/agent/brain/queue_worker.py#L217-L268)). شمارندهٔ ۲۰ attempt هم فقط بعد از فراخوانی `run_one` زیاد می‌شود ([L299-L306](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/agent/brain/queue_worker.py#L299-L306)). بنابراین **در Daily فعلی YouTubeها claim نمی‌شوند، قبل از TikTok قرار نمی‌گیرند و attempt cap را مصرف نمی‌کنند**؛ بعد از TikTok فقط به‌صورت deferred گزارش می‌شوند و در صف می‌مانند.
+
+**ریسک دفاع لایهٔ Worker:** endpoint عمومی‌تر `POST /api/brain/automation-queue/{id}/state` در `src/index.js` transition از queued به processing را برای هر platform می‌پذیرد و attempt_count را افزایش می‌دهد؛ در این لایه allow-list فقط TikTok enforce نشده است ([L1357-L1397](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/src/index.js#L1357-L1397)، [route L1499-L1503](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/src/index.js#L1499-L1503)). این خطر در Daily فعلی رخ نمی‌دهد، چون Python worker پیش از claim YouTube را deferred می‌کند؛ اما caller دیگری می‌تواند مستقیماً YouTube را به processing ببرد. **پیشنهاد، اجرا نشده:** کوچک‌ترین hardening این است که Worker قبل از transition، برای `nextStatus==="processing"` هر platform غیر از `tiktok` را با 409 رد کند. اگر در آینده YT به‌اشتباه از فیلتر Python عبور کند، guard مستقل `delivery_enabled("youtube")=false` باعث خطای `youtube_delivery_paused_by_owner` پیش از انتخاب downloader می‌شود؛ اما چون این خطا پس از claim می‌رسد، مسیر فعلی Worker باید همان allow-list را نیز enforce کند.
+
+### 8.4 Termux discovery از 23:12 UTC و نوبت کامل بعدی
+
+- **#112 — intake کامل:** [run 41737248839](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41737248839)، schedule در 2026-11-03 23:12:10Z؛ gate در 23:12:15Z مقدار `five_hour_interval_elapsed` و `should_run=true` داد. discovery در 23:14:33Z تمام شد. خلاصه: ۴۸ TikTok candidate، ۴۱ eligible، ۷ رد keyword، ۴۰ مورد از قبل موجود؛ D1 فقط **۱ مورد جدید** وارد کرد (TikTok)، `duplicate_count=0`. media_downloads=0 و rubika_posts=0.
+- **#113 — gate skip:** [run 41765363917](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41765363917)، schedule در 2026-11-04 03:09:47Z؛ تصمیم gate در 03:09:52Z برابر `five_hour_interval_not_elapsed`، `elapsed_seconds=14110` و `should_run=false` بود؛ job جمع‌آوری واقعی skipped شد و **۰ ردیف** وارد شد.
+- state آخرین intake موفق را `2026-11-03T23:14:42Z` ثبت می‌کند؛ پنج ساعت بعد `2026-11-04T04:14:42Z` است. cron هر ساعت در دقیقه‌های 07 و 37 اجرا می‌شود. در Actions بعد از #113 و تا snapshot حدود 06:00 UTC اجرای Termux دیگری دیده نشد؛ بنابراین **نوبت زمان‌بندی‌شدهٔ بعدی 06:07 UTC** اولین تیک بعدی است و gate اکنون باز است؛ full intake در صورت تحویل cron باید در همان تیک اجرا شود. شاهد gate/state: [termux workflow L7-L53](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/.github/workflows/termux-docker-discovery.yml#L7-L53)، [collection state](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/artifacts/termux_collection_state.json).
+
+### 8.5 اثبات quiet_hours قبل و از 07:00 UTC
+
+**FACT — D1 rules:** `quiet_hours.start=00:30` و `quiet_hours.end=07:00` است؛ `enabled` مقدار false ندارد، پس gate فعال است. Worker `Date` را بر مبنای UTC به دقیقه تبدیل می‌کند و برای claim تیک‌تاک شرط `current >= start && current < end` را می‌سنجد؛ در این بازه پاسخ 409 با `quiet_hours` می‌دهد و UPDATE/افزایش attempt انجام نمی‌شود ([src/index.js L1373-L1397](https://github.com/hosseinasgari898989-dev/rubika-agent/blob/main/src/index.js#L1373-L1397)). بنابراین بازهٔ دقیق مسدود **00:30 تا 06:59:59 UTC** است؛ پیش از 00:30 مشمول این quiet window نیست. در **07:00 UTC دقیقاً** شرط `current < end` false است، پس claim مجاز می‌شود و در transition موفق attempt_count یک واحد افزایش می‌یابد. این quiet-hours check فقط برای TikTok است.
+
+**نتیجه:** Daily برنامه‌ریزی‌شده در 07:00 UTC در مرز پایان quiet_hours قرار دارد؛ claimهای TikTok از همان 07:00 مجازند. هیچ مقدار quiet_hours در این ITEM تغییر نکرد.
+
+**محدودیت‌ها و عدم تغییر:** بررسی D1 فقط SELECT بود؛ هیچ retry/requeue/delete، code/config/secret/variable/gate/migration/quiet_hours update، workflow dispatch یا publishing انجام نشد. این ITEM فقط شواهد را ثبت می‌کند؛ پیشنهاد hardening Worker اجرا نشده و MAIN همچنان locked است.
