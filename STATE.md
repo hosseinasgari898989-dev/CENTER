@@ -712,3 +712,14 @@ do NOT build a visual classifier. The 6 owner-selected TikTok sources plus the c
 - **FACT:** quiet_hours فعلی 00:30 تا 07:00 UTC است؛ Worker در بازهٔ [00:30,07:00) claim تیک‌تاک را با 409 quiet_hours رد می‌کند، اما دقیقاً از 07:00 claim مجاز است.
 - **FACT:** D1 فقط SELECT شد؛ rows_written=0 و changed_db=false. هیچ code/config/secret/variable/gate/migration/quiet_hours، dispatch، retry/requeue/delete یا publishing انجام نشد. MAIN همچنان locked.
 - CENTER backup: `backup/pre-item-17-youtube-queue-audit-2026-11-04`; docs branch: `docs/item-17-youtube-queue-audit-2026-11-04`; PR: [CENTER #45](https://github.com/hosseinasgari898989-dev/CENTER/pull/45) — docs-only.
+
+
+## 2026-11-04 — ITEM 20: فهرست پیوندهای TikTok ناموفق (READ-ONLY)
+
+- **FACT:** با SELECT روی `automation_queue` تمام ردیف‌های `platform=tiktok` و `status=failed` استخراج شدند: دقیقاً ۵۶ ردیف، ۵۶ URL یکتا، و همهٔ URLها شکل canonical عمومی TikTok دارند.
+- **تطبیق گروه‌ها:** ۴۳ `required_visual_or_music_check_not_passed`، هشت `music_probability_ambiguous`، سه `pipeline_error_cobalt_http_400`، و دو مورد دیگر (یک `music_not_detected` و یک `staging_failed`). شمارها با انتظار مالک برابرند.
+- **FACT:** در هیچ‌یک از ۵۶ `metadata_json`ها کلید `music_probability`، حتی در ساختار تو‌در‌تو، وجود نداشت؛ مقدار در جدول «ذخیره نشده» است. تاریخ شکست بر اساس روز UTC از `updated_at` درج شده است.
+- سند فارسی و جدول‌های مرتب‌شده: [TIKTOK-FAILED-LINKS.md](TIKTOK-FAILED-LINKS.md). شامل فقط handle، لینک عمومی، تاریخ UTC، کد خطا و وضعیت ذخیره‌نبودن احتمال موسیقی است؛ بدون شناسهٔ داخلی یا دادهٔ محرمانه.
+- ارزیابی requeue فقط راهنمای بررسی دستی است: گروه A پس از تأیید keyword/audio/music و درنظرگرفتن کد خطای ترکیبی؛ گروه B پس از رفع ابهام صوت؛ گروه C پس از بررسی URL و Cobalt؛ گروه D جداگانه و با توجه به ابهام `staging_failed`. هیچ requeue پیشنهادشده‌ای اجرا نشد.
+- تمام درخواست‌های D1 فقط SELECT بودند و پاسخ‌ها `rows_written=0` و `changed_db=false` داشتند. هیچ retry، requeue، delete، dispatch یا تغییری در کد، تنظیمات، شمارنده‌ها یا صف انجام نشد. MAIN همچنان locked است.
+- CENTER backup: `backup/pre-item-20-failed-tiktok-links-2026-11-04`; docs branch: `docs/item-20-failed-tiktok-links-2026-11-04`. این تغییر فقط مستندات Markdown است.
