@@ -673,3 +673,17 @@ do NOT build a visual classifier. The 6 owner-selected TikTok sources plus the c
 - **SHA:** `rubika-agent/main = b7750343a4fd9b88585e7433831cf509088a0a57`. Backup پیش از تغییر: `backup/pre-music-diag-2026-11-03` با SHA پایه `a2ca032fb6b0c0a2705f954bc3de12f8100bc224`.
 - **حفاظت:** thresholdهای 0.70 و 0.15، قاعدهٔ ambiguity، keyword check، همهٔ guards و مسیر owner-approval بدون تغییرند. TEST only؛ MAIN locked. هیچ Secret/Variable/Gate/Migration/quiet_hours، D1 write دستی، dispatch یا publishing انجام نشد. PRهای #17/#23/#166 و فایل‌های subtitle دست‌نخورده‌اند.
 - **وضعیت بعدی:** waiting for the next NATURAL Daily queue run to verify TikTok sending after #167
+
+
+## 2026-11-04 — ITEM 16: گزارش کامل TikTok (READ-ONLY)
+
+- **FACT:** سند [TIKTOK-FULL-REPORT.md](TIKTOK-FULL-REPORT.md) اضافه شد؛ مقایسهٔ سیاست ۲۳ اکتبر، مسیر فعلی پس از #167، کدهای رد/خطا، Daily #31–#37، intake اخیر و ریسک‌ها را با برچسب FACT/GUESS/UNKNOWN ثبت می‌کند.
+- **FACT:** PRهای #41 و #42 در ۲۳ اکتبر مسیر TikTok را به شش منبع منتخب، keyword caption/hashtags و بررسی‌های audio/music منتقل کردند؛ flag بصری قدیمی در guard باقی ماند. **GUESS:** این mismatch باقیماندهٔ ناخواسته/مهاجرت ناقص بود؛ مالک در ۳ نوامبر آن را leftover نامید و PR #167 را تأیید کرد. #167 و #168 بعد از Daily #37 ادغام شدند.
+- **FACT:** آخرین رسید TikTok در D1: 2026-10-23 12:41:34 UTC. مقصد کانال در رکورد D1 ذخیره نیست؛ TEST بودن فقط از guard فرستنده قابل استنباط است. Secret فعلی خوانده نشد و UNKNOWN ماند.
+- **FACT:** Daily #31–#37: 10 تلاش، 0 ارسال؛ 4 مورد music_probability_ambiguous، 5 مورد visual gate قدیمی و 1 مورد Cobalt HTTP 400. artifactهای این runها فیلدهای diagnostics جدید #168 را ندارند. Daily امروز در زمان بررسی هنوز به cron ساعت 07:00 UTC نرسیده بود؛ آخرین run همچنان #37 بود.
+- **FACT:** Termux #112 آخرین intake کامل بود: 48 کشف، 41 eligible، 7 رد keyword، 40 موجود از قبل، 0 duplicate داخل report، 0 duplicate API، 1 ورود جدید. #113 فقط gate پنج‌ساعته را اجرا کرد و intake آن skipped شد. D1 snapshot: 56 failed، 2 queued، 22 sent، 7 skipped در automation_queue.
+- **FACT:** تمام D1 دسترسی‌ها SELECT-only بودند؛ rows_written=0 و changed_db=false. هیچ code/config/secret/variable/gate/quiet_hours/migration، dispatch، publishing یا تغییر مقصد انجام نشد.
+- **FACT:** rubika-agent/main بدون تغییر روی SHA c6e5035c343135b97f5ee7766d2cf8b0e3757dbe باقی ماند. MAIN locked؛ PRهای #17/#23/#166 و subtitle files untouched.
+- **Open:** منتظر اولین Daily طبیعی پس از #167 برای اثبات end-to-end در TEST؛ تصمیم مالک دربارهٔ مصرف tiktok_to_rubika_enabled، پاک‌کردن یا نگه‌داشتن flag قدیمی require_poppy_relevance_check و هرگونه تغییر احتمالی آستانه‌ها فقط با تأیید جداگانه لازم است.
+- **PR:** [CENTER #43](https://github.com/hosseinasgari898989-dev/CENTER/pull/43) — docs-only؛ فایل‌های تغییرکرده فقط STATE.md و TIKTOK-FULL-REPORT.md هستند.
+- **CENTER backup:** backup/pre-item-16-tiktok-full-report-2026-11-04؛ branch: docs/item-16-tiktok-full-report-2026-11-04. rubika-agent هیچ branch یا PR جدیدی برای این گزارش نگرفت.
