@@ -687,3 +687,15 @@ do NOT build a visual classifier. The 6 owner-selected TikTok sources plus the c
 - **Open:** منتظر اولین Daily طبیعی پس از #167 برای اثبات end-to-end در TEST؛ تصمیم مالک دربارهٔ مصرف tiktok_to_rubika_enabled، پاک‌کردن یا نگه‌داشتن flag قدیمی require_poppy_relevance_check و هرگونه تغییر احتمالی آستانه‌ها فقط با تأیید جداگانه لازم است.
 - **PR:** [CENTER #43](https://github.com/hosseinasgari898989-dev/CENTER/pull/43) — docs-only؛ فایل‌های تغییرکرده فقط STATE.md و TIKTOK-FULL-REPORT.md هستند.
 - **CENTER backup:** backup/pre-item-16-tiktok-full-report-2026-11-04؛ branch: docs/item-16-tiktok-full-report-2026-11-04. rubika-agent هیچ branch یا PR جدیدی برای این گزارش نگرفت.
+
+
+## 2026-11-04 — ITEM 16B: تطبیق شمارنده‌های صف و بررسی failed/requeue (READ-ONLY)
+
+- **FACT:** سند [TIKTOK-FULL-REPORT.md §7](TIKTOK-FULL-REPORT.md) اضافه شد. pending=32 در پنل معادل automation_queue.queued است: 2 TikTok + 30 YouTube. کل queue: queued 32، processing 0، sent 22، failed 56، uncertain 0، skipped 7؛ جمع 117. «rejected 7» همان skipped است، نه console_jobs.rejected.
+- **FACT:** صف TikTok به تفکیک شش source: meloaep_ (17 failed/1 queued/1 sent/3 skipped)، menezxl9 (8/0/5/0)، poppytv_ae (15/1/5/0)، rickkzn_ (7/0/5/1)، saylex.aep812 (8/0/5/0)، smyxae (1/0/1/3). YouTube 30 queued؛ Mob X خارج از automation_queue است.
+- **FACT:** items lifecycle مستقل است: TikTok 43 ready/29 sent/1 uncertain، Mob X 8 ready/18 sent؛ کل items 51 ready/47 sent/1 uncertain. console_jobs موب ایکس هم جداست: 11 failed، 6 ready_for_review، 2 rejected، 11 sent.
+- **FACT:** 56 failed: 43 required_visual_or_music_check_not_passed (2026-10-24 تا 2026-11-03)، 8 music_probability_ambiguous (2026-10-24 تا 2026-11-03)، 3 pipeline_error_cobalt_http_400 (2026-10-20 تا 2026-11-01)، 1 music_not_detected (2026-10-25)، 1 staging_failed (2026-10-14؛ علت UNKNOWN). هفت skipped همگی already_seen_or_unavailable (2026-10-14 تا 2026-10-20). attempt_count همهٔ 56 failed برابر 1 است.
+- **FACT:** 43 visual failures پیش از merge شدن PR #167 ثبت شدند؛ guard قدیمی اصلاح شده، اما ردیف‌های failed خودکار تغییر نمی‌کنند. PR #155 مشکل FFmpeg در تست‌های host workflow کشف Termux را رفع کرد؛ دو test run قبل از discovery/intake متوقف شده بودند. هیچ‌یک از 56 error code به FFmpeg اشاره نمی‌کند و staging_failed را نمی‌توان به #155 نسبت داد.
+- **FACT:** intake عادی همهٔ statusهای قبلی را dedupe می‌کند و ON CONFLICT DO NOTHING دارد؛ پس failedها خودکار requeue نمی‌شوند. API کنسول requeue دستی failed/uncertain/skipped را پشتیبانی می‌کند، اما در ITEM 16B هیچ requeue اجرا نشد.
+- **FACT:** همهٔ D1 queryها SELECT-only بودند؛ rows_written=0 و changed_db=false. هیچ write، retry، requeue، delete، dispatch یا publishing انجام نشد؛ MAIN locked.
+- **CENTER backup:** backup/pre-item-16b-queue-reconciliation-2026-11-04؛ branch: docs/item-16b-queue-reconciliation-2026-11-04. PR مستنداتی در حال ایجاد است.
