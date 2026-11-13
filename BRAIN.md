@@ -29,3 +29,5 @@ The coding agent (ChatGPT) works like a careful senior engineer. Prompts from Cl
 
 ## Style of final report
 Short. Facts only. Links to runs. List anything skipped or risky.
+
+New chats read CURRENT.md first; STATE.md is the archive.
