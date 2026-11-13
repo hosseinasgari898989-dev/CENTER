@@ -6,8 +6,8 @@
 
 ## وضعیت / Status
 
-- `rubika-agent/main`: `cd26f2c125f03f82c3adf96503f001bfc407e11f`
-- `CENTER/main` at this snapshot: `7cb19a5cf08020682863820e541d514608215f21`
+- `rubika-agent/main`: `5fc297ca9ae71fa50e4697d2c2cfd5b91c7c931a`
+- `CENTER/main` at this snapshot: `b0fe1bb1d6d419e42f24b392af798206c4287936`
 - Runtime policy: TEST-only. MAIN channel remains **LOCKED**; no Go-Live approval was given.
 
 ## ادغام‌شده / Merged — requested order
@@ -25,13 +25,15 @@ Previous completed merges: #183 `cca06d974211538583597a7ad8abc0be17737a37`; #184
 - [Deployed Worker health smoke](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43523625033): **success**.
 - [Console Playwright](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43523625024) and [Cloud bootstrap](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43523625029) on final main: **success**.
 - Read-only `GET /api/health`: `ok=true`, `service=rubika-agent`, `database=connected`, `mode=bootstrap`, `publishing=false`, `workflow_cron=null`. No health endpoint write/action was performed.
+- Later automatic report commit: `github-actions[bot]` advanced main from `cd26f2c` to `5fc297c`, changing only `artifacts/termux_discovery.json`; it did not change Worker source. Pages on this artifact-only head succeeded: [43524150051](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43524150051). The latest Worker deployment remains the successful code-merge deployment above.
+- Independent automation observed: Daily Rubika queue processor [run #477](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43524158398), actor `github-actions[bot]`, event `workflow_dispatch`, completed **success**; neither started nor cancelled by this task. It is not the YouTube parking workflow.
 
 ## قفل‌ها / Locked
 
 - MAIN channel and all routes to it remain **LOCKED** under GO-LIVE.md.
 - Protected item `7694421166508838165` and `staging/tiktok-7694421166508838165-square1080x1080.mp4`: untouched; no read/move/delete/retry/resend.
 - PRs [#166](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/166), [#17](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/17), and [#23](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/23): untouched.
-- No workflow dispatch, D1 write, Mega deletion, migration, secret/variable/gate/cron/`quiet_hours` change, or main-channel action was performed.
+- No manual workflow dispatch, D1 write, Mega deletion, migration, secret/variable/gate/cron/`quiet_hours` change, or main-channel action was initiated by this task. The YouTube parking workflow remains unrun. An independent bot-triggered Daily queue run is noted below.
 
 ## Owner-approved YouTube IDs
 
