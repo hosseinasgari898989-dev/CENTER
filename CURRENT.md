@@ -23,7 +23,7 @@
 
 - [#185 — panel speed phase 2](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/185), HEAD `3ab4254a603be04bc5eecbd05767fe73c18f854d`: چهار CI سبز؛ شمارندهٔ D1 در سه مسیر `p_report/p_ai/p_status` از `43/37/32` به `14/13/13` رسیده. منتظر بازبینی نهایی مالک؛ merge نشده.
 - [#186 — YouTube parking](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/186), HEAD `d46b00e7ca273d7beadffb2dfed6158e10c6f512`: سه CI سبز؛ فقط ۳۰ شناسهٔ تأییدشده و فقط `youtube + queued → skipped`. dry-run پیش‌فرض؛ اجرای واقعی نیازمند `dry_run=false` و `confirm=true`. هیچ dispatch یا اجرای واقعی انجام نشده. منتظر بازبینی و تأیید جداگانه برای اجرا.
-- [#187 — unique Mob X media + cleanup](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/187), HEAD `ac762a65302a2f3bd6fccd37e8407d5e30aa9e91`: چهار CI سبز؛ PR باز و mergeable (شاخه دو commit behind main). حذف فایل فقط پس از `sent + delivery_status=sent + rubika_message_id`؛ وضعیت‌های uncertain/failed/rejected/ready/sending و نام‌های legacy نگه داشته می‌شوند. منتظر CI کامل و بازبینی مالک؛ merge نشده.
+- [#187 — unique Mob X media + cleanup](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/187), HEAD `ac762a65302a2f3bd6fccd37e8407d5e30aa9e91`: چهار CI سبز؛ PR باز و mergeable (شاخه دو commit behind main). حذف فایل فقط پس از `sent + delivery_status=sent + rubika_message_id`؛ وضعیت‌های uncertain/failed/rejected/ready/sending و نام‌های legacy نگه داشته می‌شوند. منتظر بازبینی نهایی مالک؛ merge نشده.
 - [#166](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/166)، [#17](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/17)، [#23](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/23): قفل؛ دست‌نخورده بمانند.
 
 ### CENTER
