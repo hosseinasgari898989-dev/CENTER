@@ -4,57 +4,47 @@
 **Project:** Rubika-Agent  
 **Canonical repo:** `hosseinasgari898989-dev/rubika-agent`
 
-## وضعیت فعلی / Status
+## وضعیت / Status
 
-- `rubika-agent/main`: `63f0167593181f465cfe11d8c2eed4cda34b5505`
-- `CENTER/main`: `ce2cfcb55c42555c0ed769e4087449f95ed5331d`
-- وضعیت عملیاتی: TEST-only؛ کانال اصلی قفل است. هیچ Go-Live مجاز نشده است.
+- `rubika-agent/main`: `cd26f2c125f03f82c3adf96503f001bfc407e11f`
+- `CENTER/main` at this snapshot: `7cb19a5cf08020682863820e541d514608215f21`
+- Runtime policy: TEST-only. MAIN channel remains **LOCKED**; no Go-Live approval was given.
 
-## ادغام‌شده / Merged
+## ادغام‌شده / Merged — requested order
 
-- Rubika-Agent #183: merge SHA `cca06d974211538583597a7ad8abc0be17737a37`.
-- Rubika-Agent #184: merge/main SHA در آن مرحله `dc03d0b3d0cfb981f2b5091076b3f0cd1f8ecc43`.
-- CENTER #68: merge/current main SHA `131eab5dee1e6691c34340f6b35d4a565b5c8567`.
-- PR #183/#184 تکمیل‌شده‌اند؛ دوباره‌کاری نشود.
+- [#186 — YouTube parking](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/186): reviewed head after main sync `83f1813158a83a3415db6729088e2eb438c81b0d`; merge/main SHA `c313f63e644393bcb084211828f235ff3bf9785e`. All 3 checks green: [Agent](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43522216168), [Cloud](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43522216157), [Playwright](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43522216161). No park workflow dispatch or execution.
+- [#187 — unique Mob X media + conservative cleanup](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/187): reviewed head after main sync `fffd58fb0280369c47256af2a0910917cf3bb39c`; merge SHA `200b9869fa93df546ada4b6dfbacff29a7263fa8`. All 4 checks green: [Mob X](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43522820186), [Agent](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43522820257), [Cloud](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43522820294), [Playwright](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43522820256). Uncertain/recoverable references and legacy shared filenames are retained; no Mega deletion was run.
+- [#185 — panel speed phase 2](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/185): reviewed head after main sync `f1ce5107d3c98267bb57566b58a719a71ca4b262`; final main/merge SHA `cd26f2c125f03f82c3adf96503f001bfc407e11f`. All 4 checks green: [Cloud](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43523371121), [Agent](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43523371125), [Mob X](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43523371283), [Playwright](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43523371128). D1 click queries `p_report/p_ai/p_status`: `43/37/32 → 14/13/13`.
 
-## PRهای باز / Open PRs
+Previous completed merges: #183 `cca06d974211538583597a7ad8abc0be17737a37`; #184 `dc03d0b3d0cfb981f2b5091076b3f0cd1f8ecc43`.
 
-### rubika-agent
+## پس از merge / Post-merge verification
 
-- [#185 — panel speed phase 2](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/185), HEAD `3ab4254a603be04bc5eecbd05767fe73c18f854d`: چهار CI سبز؛ شمارندهٔ D1 در سه مسیر `p_report/p_ai/p_status` از `43/37/32` به `14/13/13` رسیده. منتظر بازبینی نهایی مالک؛ merge نشده.
-- [#186 — YouTube parking](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/186), HEAD `d46b00e7ca273d7beadffb2dfed6158e10c6f512`: سه CI سبز؛ فقط ۳۰ شناسهٔ تأییدشده و فقط `youtube + queued → skipped`. dry-run پیش‌فرض؛ اجرای واقعی نیازمند `dry_run=false` و `confirm=true`. هیچ dispatch یا اجرای واقعی انجام نشده. منتظر بازبینی و تأیید جداگانه برای اجرا.
-- [#187 — unique Mob X media + cleanup](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/187), HEAD `ac762a65302a2f3bd6fccd37e8407d5e30aa9e91`: چهار CI سبز؛ PR باز و mergeable (شاخه دو commit behind main). حذف فایل فقط پس از `sent + delivery_status=sent + rubika_message_id`؛ وضعیت‌های uncertain/failed/rejected/ready/sending و نام‌های legacy نگه داشته می‌شوند. منتظر بازبینی نهایی مالک؛ merge نشده.
-- [#166](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/166)، [#17](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/17)، [#23](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/23): قفل؛ دست‌نخورده بمانند.
-
-### CENTER
-
-- [#58 — old STATE-only log](https://github.com/hosseinasgari898989-dev/CENTER/pull/58), HEAD `8d3fa835056c72978b8feaacf1d02ff1c2d94066`: باز و از base قدیمی منشعب؛ mergeable=false. منتظر reconcile/rebase و بازبینی؛ در این task دست‌نخورده می‌ماند.
+- [Deploy Cloudflare Worker](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43523625012): **success** on `cd26f2c`.
+- [GitHub Pages build/deployment](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43523624510): **success** on `cd26f2c`.
+- [Deployed Worker health smoke](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43523625033): **success**.
+- [Console Playwright](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43523625024) and [Cloud bootstrap](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43523625029) on final main: **success**.
+- Read-only `GET /api/health`: `ok=true`, `service=rubika-agent`, `database=connected`, `mode=bootstrap`, `publishing=false`, `workflow_cron=null`. No health endpoint write/action was performed.
 
 ## قفل‌ها / Locked
 
-- کانال MAIN و هر مسیر انتشار به آن: **LOCKED** تا تأیید صریح و مستقل مالک طبق GO-LIVE.md.
-- آیتم `7694421166508838165` و فایل `staging/tiktok-7694421166508838165-square1080x1080.mp4`: protected؛ نه خواندن/انتقال/حذف و نه retry/resend.
-- PRهای #166/#17/#23: untouched.
-- هیچ migration، D1 write، Mega delete، workflow dispatch، secret/variable، gate، `quiet_hours` یا cron change انجام نشود.
+- MAIN channel and all routes to it remain **LOCKED** under GO-LIVE.md.
+- Protected item `7694421166508838165` and `staging/tiktok-7694421166508838165-square1080x1080.mp4`: untouched; no read/move/delete/retry/resend.
+- PRs [#166](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/166), [#17](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/17), and [#23](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/23): untouched.
+- No workflow dispatch, D1 write, Mega deletion, migration, secret/variable/gate/cron/`quiet_hours` change, or main-channel action was performed.
 
-## تأیید مالک / Owner-approved IDs
+## Owner-approved YouTube IDs
 
-تأیید داده‌شده فقط برای همین ۳۰ شناسهٔ YouTube است؛ این تأیید به‌معنای اجرای عملیات park نیست:
+Owner approval covers only these exact 30 IDs; it does **not** mean the park operation has been run:
 
 `youtube:agamsFTZh6s`, `youtube:0MD7Nk2WyaI`, `youtube:WrfEe3QY_YU`, `youtube:XttN2HoNXa8`, `youtube:jlEAp1HK5o4`, `youtube:kRH-RoP5stk`, `youtube:DM5MIUwcBGo`, `youtube:GvnZKPIjfSk`, `youtube:WB0lrwUYVt0`, `youtube:flIbd1yobH4`  
 `youtube:vgEXCkjClnw`, `youtube:5VcR0MBISiY`, `youtube:DmTbveAWV2k`, `youtube:IQfGNIBExOY`, `youtube:JzbtA0ken-Y`, `youtube:clFsKUSEKmQ`, `youtube:5Wy0Mftm-js`, `youtube:8cR5Z0x4nwg`, `youtube:b-t0t5NSxFo`, `youtube:g6Ss6MN6eBs`  
 `youtube:yfEPN8jWLDE`, `youtube:Xiaeg-BSZe8`, `youtube:iSf2GI1Sd-Q`, `youtube:sZ6SvR9OxK0`, `youtube:zSUIhgve6gY`, `youtube:0Ml2dBsP2Xk`, `youtube:EmlbH0Rom8U`, `youtube:IN0Wb7u43mQ`, `youtube:fyzLV_lL2aM`, `youtube:SOjI2Tg8yfA`
 
-## سه گام بعدی / Next 3 steps
+## OWNER TO-DOS
 
-1. CI نهایی #187 را روی HEAD دقیق بررسی و مرز پاک‌سازی را بازبینی کن؛ بدون merge یا Mega operation.
-2. #185 و #186 را برای تأیید مالک نگه دار؛ اجرای #186 فقط بعد از دستور مستقل و صریح با هر دو ورودی لازم.
-3. Go-LIVE.md را مبنا نگه دار؛ MAIN تا تکمیل preflightها و تأیید نهایی مستقل قفل بماند.
+1. In Actions → **Park owner-approved YouTube queue rows**, run first with `dry_run=true` and verify exactly 30 matched; then manually run with `dry_run=false` and `confirm=true`. This workflow has not been dispatched or executed by this task.
+2. In the TEST bot, press the panel **status**, **report**, and **AI** buttons; compare the displayed numbers and response speed.
+3. Manually delete legacy Mega files `official/mob_x_media.jpg` and `official/mob_x_media.mp4` only after #187 is merged and after confirming no Mob X job is running. Neither file was listed or deleted by this task.
 
-## تصمیم‌های معوق / Pending owner decisions
-
-- مجوز مستقل Go-Live و بازکردن MAIN: **در انتظار**.
-- اجازهٔ اجرای واقعی park روی ۳۰ YouTube row با `dry_run=false` و `confirm=true`: **در انتظار**.
-- بازبینی و تأیید نهایی PR #187 پیش از هر merge: **در انتظار**.
-
-**Archive:** جزئیات تاریخی فقط در `STATE.md`؛ این فایل خلاصهٔ جاری است.
+**Archive:** historical details stay in `STATE.md`. New chats read this file first.
