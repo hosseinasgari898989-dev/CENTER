@@ -746,8 +746,8 @@ Nothing else: no other secret, no variables, no gates, no D1 writes, no main cha
 - CENTER backup: `backup/pre-item-21-gemini-history-2026-11-04`; docs branch: `docs/item-21-gemini-history-2026-11-04`. این ثبت فقط مستندات Markdown است.
 
 
-
 ## 2026-11-04 — بررسی Daily queue پس از #167 و Termux discovery (READ-ONLY)
+
 - **Daily Rubika queue processor:** workflow زنده در `.github/workflows/daily-queue-processor.yml` روی cron برابر `0 7 * * *` است. در صفحهٔ Actions، برای 2026-11-04 حدود 07:00 UTC هیچ run قابل‌مشاهده‌ای پیدا نشد؛ آخرین موردِ فهرست‌شده Run #37 با ID `41658070960`، رویداد Scheduled و نتیجهٔ failed در 2026-11-03 است: [Run #37](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/41658070960). [صفحهٔ workflow](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/workflows/daily-queue-processor.yml).
 - **Artifact/per-video data:** برای run روز 2026-11-04، چون run هدفی در Actions دیده نشد، artifact `automation-daily-queue-report` نیز در دسترس نبود. بنابراین هیچ ردیفِ ویدئو، id، handle، وضعیت sent/rejected، reject code، `music_probability`، `has_audio_stream` یا destination از گزارش sanitized قابل استخراج نیست؛ این موارد UNKNOWN/UNAVAILABLE هستند، نه صفر یا ردشده.
 - **TikTok پس از #167: UNPROVEN.** آخرین Daily run قابل‌مشاهده #37 در 3 نوامبر failed است و در صفحهٔ Actions اجرای جدیدی پس از merge شدن #167 برای پردازش روز 4 نوامبر دیده نشد. هیچ سندی از ارسال موفق TikTok پس از #167 در artifact روز موردنظر وجود ندارد؛ بنابراین نه PROVEN و نه FAILED، بلکه UNPROVEN.
