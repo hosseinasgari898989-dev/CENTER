@@ -6,9 +6,17 @@
 
 ## وضعیت / Status
 
-- `rubika-agent/main`: `5fc297ca9ae71fa50e4697d2c2cfd5b91c7c931a`
-- `CENTER/main` at this snapshot: `b0fe1bb1d6d419e42f24b392af798206c4287936`
+- `rubika-agent/main`: `27ccc5adf24e0ab69fefe8fb91eb5b18ae2b11d4`
+- `CENTER/main` at this snapshot: `783b4b51c9867a93a9a6f598547264b4b0340b2d`
 - Runtime policy: TEST-only. MAIN channel remains **LOCKED**; no Go-Live approval was given.
+
+## 2026-11-14 — H2 final: PR #189 سپس #190 ادغام شدند
+
+- [PR #189](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/189) با Squash ادغام شد؛ Head بررسی‌شده `ed3c20b6af8d5a8e101f0abe61b8b378edf364c6` و Merge SHA برابر `0f99d411ec92f99236b6d12cadeaab8e64eb8ff0` بود. هر سه Check روی همان Head موفق شدند.
+- [PR #190](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/190) پس از sync ایمن با merge commit `cbeda2a370d2b8f6a3b4c99dd26853b96e9aa588` (بدون force-push) بررسی شد؛ هر سه Check روی Head نهایی `cbeda2a370d2b8f6a3b4c99dd26853b96e9aa588` موفق شدند و سپس PR با Squash در `27ccc5adf24e0ab69fefe8fb91eb5b18ae2b11d4` ادغام شد.
+- Run [Worker health smoke #43544386078](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43544386078) روی SHA نهایی موفق شد؛ GET `/health` سلامت Worker و اتصال D1 را تأیید کرد.
+- [GitHub Pages build/deployment #43544384971](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43544384971) روی همان SHA نهایی موفق شد.
+- وضعیت عملیاتی همچنان TEST-only است و MAIN channel **LOCKED** باقی می‌ماند. هیچ Workflow دستی، D1 write، Mega عملیات، migration، secret/variable/gate/cron یا تغییر publishing انجام نشد؛ تست Health نیز AI، دانلود رسانه و Rubika post انجام نداد.
 
 ## ادغام‌شده / Merged — requested order
 
