@@ -58,3 +58,11 @@ Owner approval covers only these exact 30 IDs; it does **not** mean the park ope
 3. Manually delete legacy Mega files `official/mob_x_media.jpg` and `official/mob_x_media.mp4` only after #187 is merged and after confirming no Mob X job is running. Neither file was listed or deleted by this task.
 
 **Archive:** historical details stay in `STATE.md`. New chats read this file first.
+
+## 2026-11-14 — PR #191 و #192 ادغام و بررسی پس از انتشار
+
+- [PR #191](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/191) ابتدا با squash ادغام شد: head نهایی پس از sync با main برابر `111139671b6210a8c39e80f2d270984e83a48a13` و merge/main SHA برابر `ab70bbfafa0403ce7cb51c3c730a4b991e710791` بود. همهٔ checkها روی همان head موفق شدند.
+- [PR #192](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/192) پس از sync با main شامل #191، با squash ادغام شد: head نهایی `e8da4a07bc6bb0d70a292992fd9fe2177652703c` و merge/main SHA برابر `7a09233a7dbc56f071b20a5cc9615ca67dccbb5f` بود. همهٔ checkها روی همان head موفق شدند.
+- [Deploy Cloudflare Worker #43578001533](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43578001533) روی SHA نهایی موفق شد؛ [GitHub Pages build/deploy #43578001189](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43578001189) نیز موفق شد.
+- فقط GET خواندنی `/api/health` انجام شد: `ok=true`, `database=connected`, `mode=bootstrap`, `publishing=false`, `workflow_cron=null` (timestamp پاسخ: `2026-11-14T08:55:44.214Z`).
+- TEST-only حفظ شد و MAIN همچنان **LOCKED** است. این کار هیچ D1 write، workflow dispatch، Mega deletion، migration، secret/variable/cron/gate یا تغییر publishing انجام نداد؛ آیتم محافظت‌شدهٔ `7694421166508838165` دست‌نخورده ماند.
