@@ -1,14 +1,24 @@
 # CURRENT — وضعیت فعلی پروژه / Current Project Snapshot
 
-**Date:** 2026-11-14  
+**Date:** 2026-11-16  
 **Project:** Rubika-Agent  
 **Canonical repo:** `hosseinasgari898989-dev/rubika-agent`
 
 ## وضعیت / Status
 
-- `rubika-agent/main`: `27ccc5adf24e0ab69fefe8fb91eb5b18ae2b11d4`
-- `CENTER/main` at this snapshot: `783b4b51c9867a93a9a6f598547264b4b0340b2d`
+- `rubika-agent/main`: `44224aaa74e3915df1655db5e37bc81ac8397c7a`
+- `CENTER/main` before this docs-only update: `a85d77cdab33eeb9a85bc0c8c34ce0ff2f673e8c`
 - Runtime policy: TEST-only. MAIN channel remains **LOCKED**; no Go-Live approval was given.
+
+## 2026-11-16 — PR #205/#206 merged؛ Task J preflight BLOCKED
+
+- **FACT — Task H / [PR #205](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/205):** squash-merged. Exact reviewed head `33a4b3ebd3ef1ad70e2ea82373197755ba05189b`; all 3 checks passed on that SHA: Agent [43832466064](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43832466064), Cloud [43832466035](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43832466035), Playwright [43832466055](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43832466055). Merge SHA: `e062043dc159e4bfda1945856d038809bd33fe7f`.
+- **FACT — Task I / [PR #206](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/206):** after #205 moved main, backed up the old head and synced the branch by a non-force merge commit `90f33f5362c3699ea971778d8315380efaac090a`. The overlapping `tests/worker.test.mjs` retained both H's owner/viewer access assertions and I's scan-now tests. All required checks passed on the updated head: Agent [43834195558](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43834195558), Cloud [43834195596](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43834195596), Playwright [43834195426](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43834195426); Mob X workflow run [43834195466](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43834195466) completed, with claim/stage, deletion and publish jobs skipped. PR squash-merge SHA and current `rubika-agent/main`: `44224aaa74e3915df1655db5e37bc81ac8397c7a`.
+- **FACT — post-merge:** Deploy Worker [43834500279](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43834500279), Pages [43834499628](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43834499628), and deployed Worker health smoke [43834500250](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43834500250) succeeded on `44224aaa`. Read-only GET `/api/health` returned `ok=true`, `database=connected`, `mode=bootstrap`, `publishing=false`.
+- **FACT — Termux cron dispatch path:** `src/workflow_cron.js` passes `null` for `termux-docker-discovery.yml`; `src/owner_panel.js:dispatchMobXWorkflow` maps that cron path to `inputs: { dry_run: "false" }`. The task-I tests verify that exact payload. The owner-facing Scan Now path remains explicitly `dry_run="true"`; it was not activated by this task.
+- **PENDING — next Termux Summary:** the latest observed Termux run [43831734120](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43831734120) was an owner-triggered `workflow_dispatch` at `2026-11-16T08:30:14Z`, before the post-#206 deployment. No Termux run was present after the deployment at the last read-only check; therefore there is no intervening post-deploy run to classify as dry-run, and the next run's Summary cannot yet be verified. Its expected mode is `Mode: normal metadata intake`. No workflow was dispatched by this task.
+- **FACT — Task J / read-only GO-LIVE preflight:** **BLOCKED**. The owner has not given explicit plain-text Go-Live approval; destination/admin verification and the complete TEST-channel end-to-end/capacity-alert checks are not evidenced by this preflight. Deployment and health checks passed, but they do not satisfy those missing gates. MAIN channel remains **LOCKED**; runtime stays TEST-only. No secret, variable, gate, migration, cron, quiet-hours, D1, Mega, publishing or channel state was changed.
+- **Backup / docs branch for Task K:** `backup/pre-task-k-center-update-2026-11-16` / `docs/task-k-current-go-live-2026-11-16`. This entry is documentation only.
 
 ## 2026-11-14 — H2 final: PR #189 سپس #190 ادغام شدند
 
