@@ -7,7 +7,7 @@
 ## وضعیت / Status
 
 - `rubika-agent/main`: `44224aaa74e3915df1655db5e37bc81ac8397c7a`
-- `CENTER/main` before this docs-only update: `${base}`
+- `CENTER/main` before this docs-only update: `a85d77cdab33eeb9a85bc0c8c34ce0ff2f673e8c`
 - Runtime policy: TEST-only. MAIN channel remains **LOCKED**; no Go-Live approval was given.
 
 ## 2026-11-16 — PR #205/#206 merged؛ Task J preflight BLOCKED
