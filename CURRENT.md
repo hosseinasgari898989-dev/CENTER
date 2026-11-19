@@ -1,8 +1,16 @@
 # CURRENT — وضعیت فعلی پروژه / Current Project Snapshot
 
+## 2026-11-19 — PR #218 merged; manual read-only channel probe awaiting owner run
+
+- **FACT — [rubika-agent PR #218](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/218):** squash-merged after all 7 CI checks succeeded on head `f7e2ecdad83e197b708f0b23e50043defab112a0`. Merge SHA and current `rubika-agent/main`: `fe31aa089e33215790ab658f65f64777ad8553ca`.
+- **Backup retained:** `backup/pre-channel-read-probe-2026-11-19`.
+- **Owner action:** the manual-only workflow has not been dispatched; the owner must run it once and inspect the JSON comparison for TEST and MAIN.
+
+channel read-only probe merged (workflow 'Rubika channel read-only probe', manual); owner must run it once; then read the JSON (TEST vs MAIN get_chat). MAIN still LOCKED; #215 unreviewed/unmerged.
+
 ## 2026-11-19 — PR #217 merged; read-only MAIN preflight result
 
-- **FACT — PR #217:** [Improve read-only MAIN preflight diagnostics](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/217) was squash-merged. Reviewed head SHA: `2fbf8aafbe0da306955a57989c4524b37f8d9410`; merge SHA and current `rubika-agent/main`: `1beb6003b7e83152ed1dd25dba225f6200c36b4a`.
+- **FACT — PR #217:** [Improve read-only MAIN preflight diagnostics](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/217) was squash-merged. Reviewed head SHA: `2fbf8aafbe0da306955a57989c4524b37f8d9410`; merge SHA and current `rubika-agent/main`: `fe31aa089e33215790ab658f65f64777ad8553ca`.
 - **FACT — automatic preflight:** the existing push-triggered [Rubika main-channel credential preflight run #44511714512](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/44511714512) started on the merge SHA and completed with failure. No manual workflow dispatch was used.
 - **FACT — final JSON line from the run log:** `ok=false`, `failure_stage=main_chat_failed`, `bot_identity_ok=true`, `main_matches_test_pin=false`, `main_destination_accessible=false`, `accessible_via=null`, `chat_exception_type=null`, `chat_response_status=INVALID_INPUT`, `chat_response_description=null`; `read_only_checks` contains only `get_chat` with `ok=false` and `status=INVALID_INPUT`; `read_only_method_presence` reports `get_chat=true` and all other allowlisted methods false. Exact sanitized JSON:
 ```json
