@@ -10,7 +10,7 @@ channel read-only probe merged (workflow 'Rubika channel read-only probe', manua
 
 ## 2026-11-19 — PR #217 merged; read-only MAIN preflight result
 
-- **FACT — PR #217:** [Improve read-only MAIN preflight diagnostics](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/217) was squash-merged. Reviewed head SHA: `2fbf8aafbe0da306955a57989c4524b37f8d9410`; merge SHA and current `rubika-agent/main`: `fe31aa089e33215790ab658f65f64777ad8553ca`.
+- **FACT — PR #217:** [Improve read-only MAIN preflight diagnostics](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/217) was squash-merged. Reviewed head SHA: `2fbf8aafbe0da306955a57989c4524b37f8d9410`; merge SHA: `1beb6003b7e83152ed1dd25dba225f6200c36b4a`.
 - **FACT — automatic preflight:** the existing push-triggered [Rubika main-channel credential preflight run #44511714512](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/44511714512) started on the merge SHA and completed with failure. No manual workflow dispatch was used.
 - **FACT — final JSON line from the run log:** `ok=false`, `failure_stage=main_chat_failed`, `bot_identity_ok=true`, `main_matches_test_pin=false`, `main_destination_accessible=false`, `accessible_via=null`, `chat_exception_type=null`, `chat_response_status=INVALID_INPUT`, `chat_response_description=null`; `read_only_checks` contains only `get_chat` with `ok=false` and `status=INVALID_INPUT`; `read_only_method_presence` reports `get_chat=true` and all other allowlisted methods false. Exact sanitized JSON:
 ```json
@@ -27,7 +27,7 @@ main_chat_failed: get_chat returned INVALID_INPUT with empty description; cause 
 
 ## وضعیت / Status
 
-- `rubika-agent/main`: `1beb6003b7e83152ed1dd25dba225f6200c36b4a`
+- `rubika-agent/main`: `fe31aa089e33215790ab658f65f64777ad8553ca`
 - `CENTER/main` before this docs-only follow-up: `b453b2c1e1565f66fa26c9cf7d522c58d26e5989`
 - Runtime policy: TEST-only. MAIN channel remains **LOCKED**; no Go-Live approval was given.
 
