@@ -11,6 +11,7 @@
 - **FACT — separate pull-request checks:** all required PR checks passed on reviewed head `2fbf8aafbe0da306955a57989c4524b37f8d9410`; the actual MAIN verification job was skipped for the PR and only ran after merge via the existing push trigger.
 - **Operational lock:** main channel still LOCKED; #215 still unreviewed and unmerged. No cause is inferred for `main_chat_failed`.
 - **Backup retained:** `backup/pre-main-channel-preflight-diag-2026-11-19`.
+main_chat_failed: get_chat returned INVALID_INPUT with empty description; cause not yet determined; MAIN still LOCKED; #215 unreviewed/unmerged.
 
 **Date:** 2026-11-19  
 **Project:** Rubika-Agent  
