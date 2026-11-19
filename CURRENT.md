@@ -1,12 +1,38 @@
 # CURRENT — وضعیت فعلی پروژه / Current Project Snapshot
 
+## channel read-only probe result 2026-11-19
+
+Run: [#44517168756](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/44517168756) — workflow and `probe` job conclusion: `success`.
+
+Top-level:
+- `bot_identity_ok`: `true`
+- `bot_error_type`: absent from final JSON
+
+| Field | TEST (`label=test`) | MAIN (`label=main`) |
+|---|---:|---:|
+| `guid_present` | `true` | `true` |
+| `guid_len` | `32` | `32` |
+| `guid_first2` | `c0` | `c0` |
+| `guid_sha256_prefix` | `0c939688dd55` | `83dc2fe315b4` |
+| `pin_match` | `true` | `false` |
+| `ok` | `true` | `false` |
+| `status` | `OK` | `INVALID_INPUT` |
+| `description` | `null` | `null` |
+| `dev_message` | `null` | `null` |
+| `response_keys` | `["data","status"]` | `["status"]` |
+| `exception_type` | `null` | `null` |
+| `chat_type` | `Channel` | `null` |
+| `echoed_id_matches` | `true` | `null` |
+
+MAIN still LOCKED; #215 unreviewed/unmerged.
+
 ## 2026-11-19 — PR #218 merged; manual read-only channel probe awaiting owner run
 
 - **FACT — [rubika-agent PR #218](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/218):** squash-merged after all 7 CI checks succeeded on head `f7e2ecdad83e197b708f0b23e50043defab112a0`. Merge SHA and current `rubika-agent/main`: `fe31aa089e33215790ab658f65f64777ad8553ca`.
 - **Backup retained:** `backup/pre-channel-read-probe-2026-11-19`.
-- **Owner action:** the manual-only workflow has not been dispatched; the owner must run it once and inspect the JSON comparison for TEST and MAIN.
+- **Owner action:** the owner manually ran [Rubika channel read-only probe #44517168756](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/44517168756) on `main`; the run and `probe` job completed successfully. The sanitized JSON result is recorded below.
 
-channel read-only probe merged (workflow 'Rubika channel read-only probe', manual); owner must run it once; then read the JSON (TEST vs MAIN get_chat). MAIN still LOCKED; #215 unreviewed/unmerged.
+channel read-only probe merged (workflow 'Rubika channel read-only probe', manual); owner-run #44517168756 completed successfully; JSON recorded below. MAIN still LOCKED; #215 unreviewed/unmerged.
 
 ## 2026-11-19 — PR #217 merged; read-only MAIN preflight result
 
