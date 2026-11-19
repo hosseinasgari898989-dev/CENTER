@@ -1,5 +1,13 @@
 # CURRENT — وضعیت فعلی پروژه / Current Project Snapshot
 
+## 2026-11-19 — PR #219 merged; channel-event diagnostic
+
+- **FACT — [rubika-agent PR #219](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/219):** squash-merged after all 10 checks concluded `success` or `skipped`. Reviewed head SHA: `04287523b5f78deac4bd8159cc6226a5f2fe6d05`; merge SHA and current `rubika-agent/main`: `d06f2be7005945724e2ab258fd54b2d25bc08d84`.
+- **FACT — automatic Deploy Worker:** [run #44520156969](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/44520156969) completed with conclusion `success` on the merge SHA. No manual workflow dispatch was used.
+
+channel-event diagnostic merged (owner_panel.js, state key last_channel_event, shown in /debug). Owner will post one message in TEST then one in MAIN, then run /debug in the bot PV and send the last_channel_event line. MAIN still LOCKED; #215 unreviewed/unmerged.
+
+---
 ## channel read-only probe result 2026-11-19
 
 Run: [#44517168756](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/44517168756) — workflow and `probe` job conclusion: `success`.
@@ -53,7 +61,7 @@ main_chat_failed: get_chat returned INVALID_INPUT with empty description; cause 
 
 ## وضعیت / Status
 
-- `rubika-agent/main`: `fe31aa089e33215790ab658f65f64777ad8553ca`
+- `rubika-agent/main`: `d06f2be7005945724e2ab258fd54b2d25bc08d84`
 - `CENTER/main` before this docs-only follow-up: `b453b2c1e1565f66fa26c9cf7d522c58d26e5989`
 - Runtime policy: TEST-only. MAIN channel remains **LOCKED**; no Go-Live approval was given.
 
