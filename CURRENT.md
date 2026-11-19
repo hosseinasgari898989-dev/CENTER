@@ -1,13 +1,26 @@
 # CURRENT — وضعیت فعلی پروژه / Current Project Snapshot
 
-**Date:** 2026-11-16  
+## 2026-11-19 — PR #217 merged; read-only MAIN preflight result
+
+- **FACT — PR #217:** [Improve read-only MAIN preflight diagnostics](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/217) was squash-merged. Reviewed head SHA: `2fbf8aafbe0da306955a57989c4524b37f8d9410`; merge SHA and current `rubika-agent/main`: `1beb6003b7e83152ed1dd25dba225f6200c36b4a`.
+- **FACT — automatic preflight:** the existing push-triggered [Rubika main-channel credential preflight run #44511714512](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/44511714512) started on the merge SHA and completed with failure. No manual workflow dispatch was used.
+- **FACT — final JSON line from the run log:** `ok=false`, `failure_stage=main_chat_failed`, `bot_identity_ok=true`, `main_matches_test_pin=false`, `main_destination_accessible=false`, `accessible_via=null`, `chat_exception_type=null`, `chat_response_status=INVALID_INPUT`, `chat_response_description=null`; `read_only_checks` contains only `get_chat` with `ok=false` and `status=INVALID_INPUT`; `read_only_method_presence` reports `get_chat=true` and all other allowlisted methods false. Exact sanitized JSON:
+```json
+{"ok":false,"failure_stage":"main_chat_failed","bot_identity_ok":true,"main_matches_test_pin":false,"main_destination_accessible":false,"accessible_via":null,"chat_exception_type":null,"chat_response_status":"INVALID_INPUT","chat_response_description":null,"read_only_checks":[{"method":"get_chat","ok":false,"status":"INVALID_INPUT"}],"read_only_method_presence":{"get_admin_chats":false,"get_channel_info":false,"get_chat":true,"get_chat_admins":false,"get_chat_info":false,"get_chat_member":false,"get_chats":false}}
+```
+- **FACT — separate pull-request checks:** all required PR checks passed on reviewed head `2fbf8aafbe0da306955a57989c4524b37f8d9410`; the actual MAIN verification job was skipped for the PR and only ran after merge via the existing push trigger.
+- **Operational lock:** main channel still LOCKED; #215 still unreviewed and unmerged. No cause is inferred for `main_chat_failed`.
+- **Backup retained:** `backup/pre-main-channel-preflight-diag-2026-11-19`.
+main_chat_failed: get_chat returned INVALID_INPUT with empty description; cause not yet determined; MAIN still LOCKED; #215 unreviewed/unmerged.
+
+**Date:** 2026-11-19  
 **Project:** Rubika-Agent  
 **Canonical repo:** `hosseinasgari898989-dev/rubika-agent`
 
 ## وضعیت / Status
 
-- `rubika-agent/main`: `44224aaa74e3915df1655db5e37bc81ac8397c7a`
-- `CENTER/main` before this docs-only follow-up: `ee7a661281baa5e910bfa0a367c9164005480cb9`
+- `rubika-agent/main`: `1beb6003b7e83152ed1dd25dba225f6200c36b4a`
+- `CENTER/main` before this docs-only follow-up: `b453b2c1e1565f66fa26c9cf7d522c58d26e5989`
 - Runtime policy: TEST-only. MAIN channel remains **LOCKED**; no Go-Live approval was given.
 
 ## 2026-11-16 — PR #205/#206 merged؛ Task J preflight BLOCKED
