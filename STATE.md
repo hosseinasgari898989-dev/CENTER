@@ -1048,3 +1048,17 @@ Nothing else: no other secret, no variables, no gates, no D1 writes, no main cha
 - **FACT — Mob X companion result:** owner-link processor [43835886124](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43835886124) reported `publishing_attempted=false`, reason `no_owner_approved_mob_x_job`; its cleanup report recorded `deleted_count=0` and `d1_writes=0`. No Mob X post or media deletion occurred in that run.
 - **ATTRIBUTION / scope:** this Cron batch and its chained actions were automatic after deployment, not manually dispatched or otherwise initiated by this task. The task only inspected GitHub Actions metadata/logs and the Worker health endpoint. Main channel remains locked; no publishing approval was granted. The D1 intake described above was part of the deployed cron run, not a D1 write by this task.
 - **CENTER docs follow-up:** backup `backup/pre-task-k-cron-followup-2026-11-16`, branch `docs/task-k-cron-followup-2026-11-16`; only `CURRENT.md` and `STATE.md` are modified.
+
+
+## 2026-11-19 — rubika-agent PR #217 squash merge and automatic MAIN preflight
+
+- **FACT — PR #217:** [Improve read-only MAIN preflight diagnostics](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/217) was squash-merged after every required check succeeded on reviewed head `2fbf8aafbe0da306955a57989c4524b37f8d9410`. Merge SHA and current `rubika-agent/main`: `1beb6003b7e83152ed1dd25dba225f6200c36b4a`.
+- **FACT — backup:** `backup/pre-main-channel-preflight-diag-2026-11-19` remains present at its original base commit.
+- **FACT — automatic preflight:** existing push-triggered [run #44511714512](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/44511714512) ran on the merge SHA; it was not manually dispatched. Unit tests in the run succeeded; the live read-only verification job completed with failure.
+- **FACT — exact sanitized final JSON from the run log:**
+```json
+{"ok":false,"failure_stage":"main_chat_failed","bot_identity_ok":true,"main_matches_test_pin":false,"main_destination_accessible":false,"accessible_via":null,"chat_exception_type":null,"chat_response_status":"INVALID_INPUT","chat_response_description":null,"read_only_checks":[{"method":"get_chat","ok":false,"status":"INVALID_INPUT"}],"read_only_method_presence":{"get_admin_chats":false,"get_channel_info":false,"get_chat":true,"get_chat_admins":false,"get_chat_info":false,"get_chat_member":false,"get_chats":false}}
+```
+- **Interpretation boundary:** record the observed `failure_stage=main_chat_failed` and `chat_response_status=INVALID_INPUT` only. `chat_exception_type=null` and `chat_response_description=null`; no cause is inferred.
+- **Operational lock:** main channel still LOCKED; #215 still unreviewed and unmerged. Runtime remains TEST-only. No messages were sent and no publishing occurred.
+- **Scope:** no changes to #215, secrets, variables, gates, pins, destinations; no manual workflow dispatch, Rubika messages, or publishing.
