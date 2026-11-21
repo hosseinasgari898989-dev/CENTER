@@ -1,3 +1,14 @@
+## 2026-11-21 — rubika-agent PR #223 merged; TikTok queue routing updated
+
+- **FACT — [rubika-agent PR #223](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/223):** squash-merged after all 7 checks succeeded on reviewed head `be589905c33d97d7fe5babfeedc3edf3d3b26aac`; merge commit and verified `rubika-agent/main` SHA: `10893f7b168c15e6f6567c3d80a7ffff6245b2ab`.
+- **FACT — workflow behavior on main:** `.github/workflows/daily-queue-processor.yml` now routes to MAIN whenever `RUBIKA_AGENT_TIKTOK_EDIT_QUEUE_PRODUCTION_GATE` is exactly `open`, including scheduled runs and `workflow_dispatch` runs (the chained Termux/queue-intake paths and owner-panel runs), unless `force_test_channel=true`. The optional boolean input defaults to `false`; setting it to `true` keeps that run on TEST for testing a new feature.
+- **Owner principle:** TEST is only for testing new features; everything already tested goes to MAIN.
+- **Gate status:** Secret/Variable values were not read back; whether the gate is currently open is **not independently verified**. This entry records the merged routing behavior, not live gate state.
+- **Next:** confirm the first real MAIN delivery by verifying owner receipt and no duplicate messages. Cosmetic follow-up: the owner notification text still says TEST-only.
+- **Safety boundary:** no Secret, Variable, gate, pin, or destination was changed; no workflow was dispatched; no Rubika message or publication was performed.
+
+---
+
 ## 2026-11-21 — rubika-agent PR #222 merged; owner approves both MAIN routes
 
 - **FACT — rubika-agent [PR #222](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/222):** merged; squash merge SHA: `dcc8a161c0b700bb10f87a6f4016f8eaf3bd5f69`. The merged `agent/brain/rubika_publisher.py` defines both `RUBIKA_AGENT_MOB_X_NEWS_MAIN_CHANNEL_GATE` and `RUBIKA_AGENT_TIKTOK_EDIT_QUEUE_PRODUCTION_GATE` in `_MAIN_GATE_ENV_NAMES`.
