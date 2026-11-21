@@ -1,3 +1,12 @@
+## 2026-11-21 — rubika-agent PR #224 merged; owner-approved Mob X link MAIN route
+
+- **FACT — rubika-agent [PR #224](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/224):** squash-merged; merge SHA and verified `rubika-agent/main`: `e4978b66f7d257314421c87f9c5504d1bf7a7aad`.
+- The owner-approved Mob X link now publishes to MAIN when `RUBIKA_AGENT_MOB_X_NEWS_MAIN_CHANNEL_GATE` is exactly `open` (TEST otherwise). The owner-link jobs in both `.github/workflows/mob-x-link-processor.yml` and `.github/workflows/mob-x-news-production.yml` route the effective `RUBIKA_CHANNEL_GUID` from `RUBIKA_MAIN_CHANNEL_GUID` only under that exact condition; `agent/brain/mob_x_link_publisher.py` uses `assert_test_channel_destination`.
+- Every real-content path now has a MAIN route (TikTok queue, Mob auto news, Mob owner link). Test tooling stays TEST by design.
+- **Remaining cosmetic text:** owner-panel strings still say “test channel” (`src/owner_panel.js` around lines 919 and 1197–1245) and the uncertain-delivery notice in `agent/brain/mob_x_link_publisher.py`.
+- **Gate status:** gate values were not independently verified; this records routing behavior only, not a live gate state.
+
+---
 ## 2026-11-21 — rubika-agent PR #223 merged; TikTok queue routing updated
 
 - **FACT — [rubika-agent PR #223](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/223):** squash-merged after all 7 checks succeeded on reviewed head `be589905c33d97d7fe5babfeedc3edf3d3b26aac`; merge commit and verified `rubika-agent/main` SHA: `10893f7b168c15e6f6567c3d80a7ffff6245b2ab`.
