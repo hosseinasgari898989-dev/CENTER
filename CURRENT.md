@@ -1,5 +1,14 @@
 # CURRENT — وضعیت فعلی پروژه / Current Project Snapshot
 
+## 2026-11-21 — rubika-agent PR #221 merged; Mob sender is destination-aware
+
+- **FACT — rubika-agent [PR #221](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/221):** squash-merged; merge SHA: `856194e464404ee018b1dc7bdc2174aca1a9b27e`.
+- **FACT — Mob X news sender:** destination-aware for the Mob X news path. MAIN is allowed only when `RUBIKA_AGENT_MOB_X_NEWS_MAIN_CHANNEL_GATE=open`, the separate `RUBIKA_MAIN_CHANNEL_GUID` matches the exact destination, and that MAIN secret is not the TEST pin. The default gate state remains closed.
+- **FACT — TikTok edit-queue sender:** remains TEST-only for MAIN. It needs its own destination-aware sender PR and its own gate: `RUBIKA_AGENT_TIKTOK_EDIT_QUEUE_PRODUCTION_GATE`.
+- MAIN remains **LOCKED**. GO-LIVE approvals 1 and 2 have not been given.
+
+---
+
 ## 2026-11-21 — Mob MAIN gate merged; sender remains TEST-only
 
 - **FACT — rubika-agent PR #220:** squash-merged; merge SHA: `66a655f0f36045ee434a3853029349a611c02e8c`.
