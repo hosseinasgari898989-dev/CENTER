@@ -1,11 +1,22 @@
 # CURRENT — وضعیت فعلی پروژه / Current Project Snapshot
 
+## 2026-11-21 — owner approval #2 recorded: Mob X news MAIN gate only
+
+- **FACT — written owner approval (2026-11-21), exact text:** «تأیید می‌کنم gate خبر Mob، یعنی RUBIKA_AGENT_MOB_X_NEWS_MAIN_CHANNEL_GATE، را open کنم.»
+- **Scope:** this approval applies only to `RUBIKA_AGENT_MOB_X_NEWS_MAIN_CHANNEL_GATE`. The owner will set the repository Variable himself, with the exact value `open`. This PR only records the approval: it does not change or verify the Variable. Until independently verified after the owner's action, report this gate as **not verified open** (fail-closed).
+- **TikTok remains CLOSED:** approval #1 for `RUBIKA_AGENT_TIKTOK_EDIT_QUEUE_PRODUCTION_GATE` has not been given. The TikTok sender remains TEST-only and requires its own destination-aware sender PR before it can target MAIN.
+- **Rollback:** clear/unset `RUBIKA_AGENT_MOB_X_NEWS_MAIN_CHANNEL_GATE`; an empty/missing value is fail-closed.
+- **Checklist-order deviation — owner decision:** Mob approval #2 was given before TikTok approval #1, contrary to the checklist sequence. The owner chose this order because the TikTok sender cannot publish to MAIN yet. This is not TikTok approval and does not authorize any other MAIN publishing path.
+- **Operational boundary:** MAIN is not globally unlocked. This record is limited to the Mob X news gate and does not claim that the gate is currently open.
+
+---
+
 ## 2026-11-21 — rubika-agent PR #221 merged; Mob sender is destination-aware
 
 - **FACT — rubika-agent [PR #221](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/221):** squash-merged; merge SHA: `856194e464404ee018b1dc7bdc2174aca1a9b27e`.
 - **FACT — Mob X news sender:** destination-aware for the Mob X news path. MAIN is allowed only when `RUBIKA_AGENT_MOB_X_NEWS_MAIN_CHANNEL_GATE=open`, the separate `RUBIKA_MAIN_CHANNEL_GUID` matches the exact destination, and that MAIN secret is not the TEST pin. The default gate state remains closed.
 - **FACT — TikTok edit-queue sender:** remains TEST-only for MAIN. It needs its own destination-aware sender PR and its own gate: `RUBIKA_AGENT_TIKTOK_EDIT_QUEUE_PRODUCTION_GATE`.
-- MAIN remains **LOCKED**. GO-LIVE approvals 1 and 2 have not been given.
+- MAIN remains **LOCKED**. Owner approval #2 (Mob-only) was recorded on 2026-11-21; approval #1 (TikTok) has not been given. This documentation does not mean the Mob gate variable has been opened; see the approval record below.
 
 ---
 
