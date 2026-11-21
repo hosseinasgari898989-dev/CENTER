@@ -1,5 +1,13 @@
 # CURRENT — وضعیت فعلی پروژه / Current Project Snapshot
 
+## 2026-11-21 — Mob MAIN gate merged; sender remains TEST-only
+
+- **FACT — rubika-agent PR #220:** squash-merged; merge SHA: `66a655f0f36045ee434a3853029349a611c02e8c`.
+- **FACT — rubika-agent PR #215:** closed unmerged after posting the supersession note; its branch was kept.
+- MAIN remains **LOCKED**. The sender-side TEST-pin guards (`rubika_publisher.assert_test_channel_destination`, `mob_x_rubika.send_test_channel_once`, `mob_x_link_publisher.publish_one`, and E2E senders) remain TEST-only. Therefore Mob cannot publish to MAIN even with its new workflow gate open.
+- **Next:** design a destination-aware sender PR; Claude to design this next step. No sender behavior is changed by this housekeeping update.
+
+---
 ## 2026-11-21 — Mob MAIN gate split; MAIN credential issue resolved
 
 - **FACT — rubika-agent PR #220:** [new Mob-gate-only PR](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/220) supersedes stale PR #215. Head SHA: `bf0c7849ef30a8f76c44615f9fafe64d20b6ab7f`; scope is only the Mob X MAIN-gate code/workflow/tests and Persian evidence checklist. PR #215 remains open and untouched; close #215 only after review of #220. Parity inventory pending review. MAIN remains **LOCKED**.
