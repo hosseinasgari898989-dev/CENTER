@@ -1,5 +1,11 @@
 # CURRENT — وضعیت فعلی پروژه / Current Project Snapshot
 
+## 2026-11-21 — Mob MAIN gate split; MAIN credential issue resolved
+
+- **FACT — rubika-agent PR #220:** [new Mob-gate-only PR](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/220) supersedes stale PR #215. Head SHA: `bf0c7849ef30a8f76c44615f9fafe64d20b6ab7f`; scope is only the Mob X MAIN-gate code/workflow/tests and Persian evidence checklist. PR #215 remains open and untouched; close #215 only after review of #220. Parity inventory pending review. MAIN remains **LOCKED**.
+- **FACT — `main_chat_failed` SOLVED 2026-11-19:** the web `#c=` ID was not the Bot API `chat_id`; secret `RUBIKA_MAIN_CHANNEL_GUID` was replaced with the ID observed in a real channel event. Read-only preflight run #21: `ok=true`, `failure_stage=none`, `main_destination_accessible=true` via `get_chat`, `main_guid_sha256_prefix=b7602acb9423`; no message sent. The raw channel ID is intentionally not recorded.
+
+---
 ## 2026-11-19 — PR #219 merged; channel-event diagnostic
 
 - **FACT — [rubika-agent PR #219](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/219):** squash-merged after all 10 checks concluded `success` or `skipped`. Reviewed head SHA: `04287523b5f78deac4bd8159cc6226a5f2fe6d05`; merge SHA and current `rubika-agent/main`: `d06f2be7005945724e2ab258fd54b2d25bc08d84`.
