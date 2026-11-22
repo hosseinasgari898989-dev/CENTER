@@ -1,3 +1,14 @@
+## 2026-11-22 — rubika-agent PR #226 merged; PV scan-and-publish button
+
+- **FACT — [rubika-agent PR #226](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/226):** squash-merged; merge SHA: `e30c6eca467a843c71bd28f3fbea4a1d6fe6e7c7`.
+- Added the owner-only PV button **«🚀 اسکن و انتشار»** (`p_scan_pub`). It is blocked closed while publishing is paused or the pause state cannot be verified.
+- Confirmation dispatches normal Termux discovery now (`dry_run=false`); eligible videos enter the queue and the TikTok queue processor runs. The destination follows the TikTok gate (`open` = MAIN).
+- The existing **«🔎 اسکن فوری — فقط گزارش»** action remains report-only (`dry_run=true`).
+- **Next:** before implementing the Bot OFF switch, inventory every automatic trigger. The switch should stop discovery, intake, queue processing, cron, and publishing while keeping the owner panel available.
+- **Safety boundary:** no secrets, variables, gates, pins, or destinations were changed; no workflow was manually dispatched; no Rubika message or publication was performed.
+
+---
+
 ## 2026-11-21 — rubika-agent PR #224 merged; owner-approved Mob X link MAIN route
 
 - **FACT — rubika-agent [PR #224](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/224):** squash-merged; merge SHA and verified `rubika-agent/main`: `e4978b66f7d257314421c87f9c5504d1bf7a7aad`.
