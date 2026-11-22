@@ -1,3 +1,14 @@
+## 2026-11-23 — rubika-agent PR #229 merged; Termux cutoff flag survives `su -i`
+
+- **FACT — [rubika-agent PR #229](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/229):** squash-merged; merge SHA and verified `rubika-agent/main`: `59e98e65f9be29d10b823f3f70d14cccf10f6376`.
+- The `.github/workflows/termux-docker-discovery.yml` workflow now passes `TERMUX_IGNORE_SOURCE_CREATED_AT` to the Termux container through a read-only mounted flag file, then restores the variable after `su -i`. The previous environment-only handoff was lost during the privilege transition.
+- **Expected next-run evidence:** the PV button **«🚀 اسکن و انتشار»** should now report `tiktok_source_cutoff_ignored=true` when its run requests that behavior. No workflow was manually dispatched to verify this.
+- **Owner decision:** do not re-send the videos that were delivered only to TEST; the owner manually posted them to MAIN. No resend was attempted.
+- **Pending diagnostic gap:** 11 TikTok queue rows remain `status=failed` with `last_error_code=music_probability_ambiguous`. They have no matching `items` rows or `delivery_attempts`; D1 therefore lacks the audio/probability diagnostics needed to determine why they did not enter owner review. This is a diagnostic follow-up, not authorization to retry or publish them.
+- **Safety boundary:** no Secrets, Variables, gates, pins, or destinations changed; no workflow was manually dispatched; no Rubika messages or publishing occurred.
+
+---
+
 ## 2026-11-22 — rubika-agent PR #226 merged; PV scan-and-publish button
 
 - **FACT — [rubika-agent PR #226](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/226):** squash-merged; merge SHA: `e30c6eca467a843c71bd28f3fbea4a1d6fe6e7c7`.
