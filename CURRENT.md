@@ -1,3 +1,15 @@
+## 2026-11-24 — rubika-agent PR #233/#232 merged; deep scan and no-music owner review
+
+- **FACT — [rubika-agent PR #233](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/233):** squash-merged; merge SHA `9c717a6f5f6d498229a64101aa3715bcc98f69b5`. Automatic [Deploy Worker #45282506254](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/45282506254) completed with **success**. Normal/scheduled discovery examines the 8 latest videos of every selected page, including console-added pages; the source-created-at date cutoff is disabled. Owner button **«🚀 اسکن و انتشار»** requests a deep scan of up to 100 latest videos per page and up to 20 new queue items per press.
+- **FACT — [rubika-agent PR #232](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/232):** squash-merged; merge SHA `d049e74b12cdf79668567adef0442c3f92a42cb6`. All PR checks succeeded. Automatic [Deploy Worker #45282695961](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/45282695961) completed with **success**. TikTok videos with an audio stream but no detected music enter **«در انتظار تأیید شما»** with reason `music_not_detected`; videos with no audio stream remain ineligible for publication.
+- **FACT — [rubika-agent PR #227](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/227):** closed unmerged as a duplicate of [#230](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/230), which is merged. Its branch was kept.
+- **Owner next steps:** press **«🔁 تلاش مجدد ناموفق‌ها»** once, then **«🚀 اسکن و انتشار»**.
+- **Pending:** text commands and `/fix`; scan summary in PV; web-console power tab.
+- **Finding:** 5 videos from `@sexter.aep` were rejected by `required_keyword_missing`; they did not match Poppy Playtime relevance.
+- **Safety boundary:** no secrets, variables, gates, pins, destinations, or power state were changed; no workflow was manually dispatched or enabled/disabled; no Rubika message or publication occurred.
+
+---
+
 ## 2026-11-23 — rubika-agent PR #230 merged; PV bot power switch
 
 - **FACT — [rubika-agent PR #230](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/230):** squash-merged; merge SHA and verified `rubika-agent/main`: `31f055f6c8131bcfc8047dcf1ad8c680290bc93b`.
