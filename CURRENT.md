@@ -1,3 +1,13 @@
+## 2026-11-24 — owner-authorized one-time TikTok music-failure re-queue
+
+- **FACT — D1 re-queue:** after the exact eligibility SELECT found **13** TikTok rows, the one owner-authorized UPDATE changed those 13 rows from `failed` to `queued`, cleared `last_error_code`, and set `updated_at`. `RETURNING` returned 13 IDs and D1 `meta.changes=13`. Cloudflare's `meta.rows_written=39` includes index writes, so it is not the same measure as the number of queue records changed.
+- **Status counts before → after:** `queued 0→13`, `failed 17→4`, `sent 109→109`, `processing 0→0`, `uncertain 0→0`, `skipped 7→7`.
+- **Expected next step:** the next scheduled or intake-triggered queue run will re-process these rows; expected destination in the workflow is owner review **«در انتظار تأیید شما»**. The queue processor was not dispatched as part of this task.
+- **PV button clarification:** **«🔁 تلاش مجدد ناموفق‌ها»** only retries Mob X link jobs; it does **NOT** retry TikTok queue failures.
+- **Safety boundary:** no manual workflow dispatch, workflow enable/disable, secret/variable/gate/pin/destination change, Rubika message, or publishing was performed.
+
+---
+
 ## 2026-11-24 — rubika-agent PR #233/#232 merged; deep scan and no-music owner review
 
 - **FACT — [rubika-agent PR #233](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/233):** squash-merged; merge SHA `9c717a6f5f6d498229a64101aa3715bcc98f69b5`. Automatic [Deploy Worker #45282506254](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/45282506254) completed with **success**. Normal/scheduled discovery examines the 8 latest videos of every selected page, including console-added pages; the source-created-at date cutoff is disabled. Owner button **«🚀 اسکن و انتشار»** requests a deep scan of up to 100 latest videos per page and up to 20 new queue items per press.
