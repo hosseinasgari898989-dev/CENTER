@@ -1,3 +1,13 @@
+## 2026-11-23 — rubika-agent PR #230 merged; PV bot power switch
+
+- **FACT — [rubika-agent PR #230](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/230):** squash-merged; merge SHA and verified `rubika-agent/main`: `31f055f6c8131bcfc8047dcf1ad8c680290bc93b`.
+- Added the PV **⏻ خاموش/روشن کردن ربات** control. **OFF** sets `bot_off` and `publishing_paused`, disables the six scheduled workflows through the GitHub API, and makes Worker cron skip while `bot_off` is active; **ON** re-enables those workflows. This records feature behavior, not a change to the current power state.
+- **FACT — [rubika-agent PR #231](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/231):** squash-merged; merge SHA `986af02d39518493a585d7ee67f82ba9c55e5ed`. The queue-success message no longer describes the queue as TEST-only.
+- **Pending:** text commands and `/fix`; deep scan; audio-doubt routing to owner review (videos with no audio stream remain ineligible for publication even after owner approval); scan summary in PV; web-console power tab.
+- **Safety boundary:** no secrets, variables, gates, pins, destinations, or power state were changed by this documentation task; no workflow was manually dispatched or enabled/disabled; no Rubika message or publishing occurred.
+
+---
+
 ## 2026-11-23 — rubika-agent PR #229 merged; Termux cutoff flag survives `su -i`
 
 - **FACT — [rubika-agent PR #229](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/229):** squash-merged; merge SHA and verified `rubika-agent/main`: `59e98e65f9be29d10b823f3f70d14cccf10f6376`.
