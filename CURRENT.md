@@ -4,7 +4,7 @@
 - **FACT — CI:** all 7 PR check runs completed with `success` on reviewed head `d8ca7823c694acf602ad45135409cc7d4eb73616`. The backup branch `backup/pre-gemini-smoke-2026-11-24` remains at the pre-change main SHA `ca37bd25b05a2e5b084d5d1975ea1d2d9022cbce`.
 - **Authorized manual run result: NOT DISPATCHED.** The browser automation tool rejected startup because its wallet balance was `-$0.20`; execution never began. No GitHub Actions run was created, no Gemini API request was sent, and therefore there is no run URL or final JSON line. No retry was made.
 - **Free-tier note:** content sent on the Gemini free tier is used by Google to improve its products.
-- **Next (proposals only; not implemented):** Gemini audio second opinion for music detection only when Workers AI is ambiguous (`<0.70)); possibly Gemini as the first translation provider. These are proposals, not production routing changes; existing Workers AI behavior remains unchanged until a separate owner-approved change.
+- **Next (proposals only; not implemented):** Gemini audio second opinion for music detection only when Workers AI confidence is below 0.70; possibly Gemini as the first translation provider. These are proposals, not production routing changes; existing Workers AI behavior remains unchanged until a separate owner-approved change.
 - **Safety:** no secret value was read or printed; no secret, variable, gate, pin, destination, D1 state, Rubika message, or publishing action was changed or performed.
 
 ---
