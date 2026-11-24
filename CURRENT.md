@@ -1,3 +1,14 @@
+## 2026-11-24 — Gemini API smoke test PR #236 merged; manual dispatch blocked
+
+- **FACT — rubika-agent PR #236:** squash-merged with SHA `0de6320714861bff2b4f59a39048d0f2d5f9ed21`. The change adds the manual Gemini Flash smoke test, its three offline unit tests, and the workflow `Gemini API smoke test`.
+- **FACT — CI:** all 7 PR check runs completed with `success` on reviewed head `d8ca7823c694acf602ad45135409cc7d4eb73616`. The backup branch `backup/pre-gemini-smoke-2026-11-24` remains at the pre-change main SHA `ca37bd25b05a2e5b084d5d1975ea1d2d9022cbce`.
+- **Authorized manual run result: NOT DISPATCHED.** The browser automation tool rejected startup because its wallet balance was `-$0.20`; execution never began. No GitHub Actions run was created, no Gemini API request was sent, and therefore there is no run URL or final JSON line. No retry was made.
+- **Free-tier note:** content sent on the Gemini free tier is used by Google to improve its products.
+- **Next (proposals only; not implemented):** Gemini audio second opinion for music detection only when Workers AI confidence is below 0.70; possibly Gemini as the first translation provider. These are proposals, not production routing changes; existing Workers AI behavior remains unchanged until a separate owner-approved change.
+- **Safety:** no secret value was read or printed; no secret, variable, gate, pin, destination, D1 state, Rubika message, or publishing action was changed or performed.
+
+---
+
 ## 2026-11-24 — rubika-agent PR #234/#235 merged
 
 - **PR #234** merged with squash SHA `0507cd8b11542272294b59ec4345674c4b0564a6`: Persian text commands mirror the owner-panel buttons: `/اسکن_و_انتشار /اسکن /بازبینی /توقف /ربات /تلاش_مجدد /وضعیت /صف /گزارش /خطاها /راهنما /منو`. These commands are listed in the help screen. `/fix` and `/تازه` clear stale panel state and send a fresh panel.
