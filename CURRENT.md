@@ -1,3 +1,9 @@
+## 2026-11-25 — GitHub Models smoke test merged
+
+- GitHub Models smoke test merged (`219f95de50658febfbcad6dd6d42c8c040304c7c`); the owner runs it manually. GitHub Models is the first candidate engine for the Source-AI (free for GitHub accounts; `GITHUB_TOKEN` with `models: read`; Low tier 150 requests/day, 8000 in / 4000 out tokens per request).
+
+---
+
 ## 2026-11-24 — Gemini API smoke test PR #236 merged; manual dispatch blocked
 
 - **FACT — rubika-agent PR #236:** squash-merged with SHA `0de6320714861bff2b4f59a39048d0f2d5f9ed21`. The change adds the manual Gemini Flash smoke test, its three offline unit tests, and the workflow `Gemini API smoke test`.
