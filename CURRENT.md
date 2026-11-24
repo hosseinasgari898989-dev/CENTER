@@ -1,3 +1,11 @@
+## 2026-11-24 — rubika-agent PR #234/#235 merged
+
+- **PR #234** merged with squash SHA `0507cd8b11542272294b59ec4345674c4b0564a6`: Persian text commands mirror the owner-panel buttons: `/اسکن_و_انتشار /اسکن /بازبینی /توقف /ربات /تلاش_مجدد /وضعیت /صف /گزارش /خطاها /راهنما /منو`. These commands are listed in the help screen. `/fix` and `/تازه` clear stale panel state and send a fresh panel.
+- **PR #235** merged with squash SHA `ca37bd25b05a2e5b084d5d1975ea1d2d9022cbce`: added `docs/SOURCE_AI_DESIGN_FA.md`. This is **phase 0 only**; phase 1 has not started. Owner decisions remain pending: output language, drafts per day, polls support, and caption style.
+- **Pending:** send scan summary to PV; web-console power tab; a further authorized D1 re-queue of 13 failed TikTok music rows, only on the owner's explicit order. No re-queue is authorized or performed by this note.
+
+---
+
 ## 2026-11-24 — owner-authorized one-time TikTok music-failure re-queue
 
 - **FACT — D1 re-queue:** after the exact eligibility SELECT found **13** TikTok rows, the one owner-authorized UPDATE changed those 13 rows from `failed` to `queued`, cleared `last_error_code`, and set `updated_at`. `RETURNING` returned 13 IDs and D1 `meta.changes=13`. Cloudflare's `meta.rows_written=39` includes index writes, so it is not the same measure as the number of queue records changed.
