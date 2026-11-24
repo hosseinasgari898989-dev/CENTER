@@ -1,6 +1,6 @@
-## 2026-11-25 — GitHub Models smoke test merged
+## 2026-11-25 — Source-AI provider decision corrected
 
-- GitHub Models smoke test merged (`219f95de50658febfbcad6dd6d42c8c040304c7c`); the owner runs it manually. GitHub Models is the first candidate engine for the Source-AI (free for GitHub accounts; `GITHUB_TOKEN` with `models: read`; Low tier 150 requests/day, 8000 in / 4000 out tokens per request).
+- GitHub Models is **RETIRED (2026-07-30)** and is not an engine. Gemini free tier returned HTTP 403. Cerebras requires a payment card. The Source-AI engine order is **Groq first, OpenRouter second**. Workers AI remains limited to music detection and translation fallback.
 
 ---
 
