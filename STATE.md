@@ -1062,3 +1062,12 @@ Nothing else: no other secret, no variables, no gates, no D1 writes, no main cha
 - **Interpretation boundary:** record the observed `failure_stage=main_chat_failed` and `chat_response_status=INVALID_INPUT` only. `chat_exception_type=null` and `chat_response_description=null`; no cause is inferred.
 - **Operational lock:** main channel still LOCKED; #215 still unreviewed and unmerged. Runtime remains TEST-only. No messages were sent and no publishing occurred.
 - **Scope:** no changes to #215, secrets, variables, gates, pins, destinations; no manual workflow dispatch, Rubika messages, or publishing.
+
+## 2026-11-25 — rubika-agent PR #243 merged; provider error diagnostics improved
+
+- **FACT — [rubika-agent PR #243](https://github.com/hosseinasgari898989-dev/rubika-agent/pull/243):** squash-merged after all 7 PR checks completed with `success`. Reviewed head: `55193785b1e7691d792dfff87f00c2b560ced846`; merge SHA and verified `rubika-agent/main`: `321596ffdac27e78d19f686dd2360e7fc48dcbf5`.
+- **Scope:** only `agent/brain/ai_quiz_smoke.py` and new `tests/test_ai_quiz_smoke_errors.py` changed. The existing `tests/test_ai_quiz_smoke.py` had no whole-provider-entry dictionary assertion, so it was not modified.
+- **Change:** HTTP errors now retain a bounded `Retry-After`; `_error_detail` reports sanitized provider error type/code/param/message, optional upstream provider, and retry-after. Configured provider key is redacted from error messages; raw response body is not logged.
+- **Tests:** added 3 requested unit tests for safe field extraction/key redaction, empty/non-dict payloads, and message truncation/string error redaction. All 7 PR checks succeeded: checks, console-browser-smoke, brain-tests, CodeQL, Analyze Python, Analyze Actions, Analyze JavaScript/TypeScript.
+- **Safety:** no secret values were read or printed; no secrets, variables, gates, pins, destinations, migrations, or workflow settings changed. No workflow was manually dispatched; no Rubika messages or publishing occurred.
+- **Post-merge verification:** automated checks started on merge SHA `321596ff`; at the time of this entry they were still in progress. The Worker deploy workflow is not expected to run because this PR changed no `src/**`, `wrangler.jsonc`, or deploy workflow file.
