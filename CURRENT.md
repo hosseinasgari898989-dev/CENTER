@@ -279,3 +279,9 @@ Owner approval covers only these exact 30 IDs; it does **not** mean the park ope
 - [Deploy Cloudflare Worker #43578001533](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43578001533) روی SHA نهایی موفق شد؛ [GitHub Pages build/deploy #43578001189](https://github.com/hosseinasgari898989-dev/rubika-agent/actions/runs/43578001189) نیز موفق شد.
 - فقط GET خواندنی `/api/health` انجام شد: `ok=true`, `database=connected`, `mode=bootstrap`, `publishing=false`, `workflow_cron=null` (timestamp پاسخ: `2026-11-14T08:55:44.214Z`).
 - TEST-only حفظ شد و MAIN همچنان **LOCKED** است. این کار هیچ D1 write، workflow dispatch، Mega deletion، migration، secret/variable/cron/gate یا تغییر publishing انجام نداد؛ آیتم محافظت‌شدهٔ `7694421166508838165` دست‌نخورده ماند.
+
+---
+
+## 2026-11-26 — Source drafts phase 1 merged
+
+source drafts phase 1 merged (f1b10021aa86db2950d4335bca13428513194f30): agent/source (wiki reader, template quiz builder), manual workflow 'Source drafts' (dry run by default; send_to_pv sends drafts only to the owner's PV; nothing is published to a channel). Next: PV approve/reject buttons, ai_drafts ledger in D1, separate MAIN gate, polls via sendPoll (to verify), images only with verified licence.
