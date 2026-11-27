@@ -285,3 +285,7 @@ Owner approval covers only these exact 30 IDs; it does **not** mean the park ope
 ## 2026-11-26 — Source drafts phase 1 merged
 
 source drafts phase 1 merged (f1b10021aa86db2950d4335bca13428513194f30): agent/source (wiki reader, template quiz builder), manual workflow 'Source drafts' (dry run by default; send_to_pv sends drafts only to the owner's PV; nothing is published to a channel). Next: PV approve/reject buttons, ai_drafts ledger in D1, separate MAIN gate, polls via sendPoll (to verify), images only with verified licence.
+
+## 2026-11-27 — Source drafts PV delivery and Mob X dispatch routing
+
+source drafts now send one private message per draft (fe94d323ed1b82979f0cb246c1853ab54ac979ab); Mob X news now goes to MAIN whenever the Mob gate is exactly open, also for Worker-cron dispatches; force_test_channel=true sends a run to TEST (576ce536cd9b049c5b68ac264991eb825b72fed3).
